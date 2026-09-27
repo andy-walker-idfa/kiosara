@@ -1,0 +1,1 @@
+Clearer settings: required fields marked, every option explained, rarely needed options under Advanced, one Save button. New "Test connection" for MQTT that names the exact problem. Tidier number display in Home Assistant.

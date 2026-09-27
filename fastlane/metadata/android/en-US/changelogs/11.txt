@@ -1,0 +1,1 @@
+The dashboard now switches the screen on when it comes back to the front (after an update, a restart or the end of "Unlock for 15 minutes"); before, it could stay dark if the screen had timed out while another app was open.

@@ -1,0 +1,1 @@
+First version: full-screen Home Assistant dashboard with persistent login, automatic error recovery, periodic and idle reload, Home app support.

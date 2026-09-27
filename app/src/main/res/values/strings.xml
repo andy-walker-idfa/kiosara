@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Kiosara</string>
+
+    <!-- Error overlay -->
+    <string name="error_title_unreachable" translatable="false">Can’t reach Home Assistant</string>
+    <string name="error_title_certificate" translatable="false">Certificate not trusted</string>
+    <string name="error_title_crash_loop" translatable="false">The dashboard keeps crashing</string>
+    <string name="error_detail_http" translatable="false">The server answered with HTTP %1$d.</string>
+    <string name="error_detail_certificate" translatable="false">The certificate of %1$s is not trusted. To allow a self-signed certificate, enter this host in Settings → Self-signed certificate host.</string>
+    <string name="error_detail_certificate_trustable" translatable="false">Self-signed certificate. Trust it only if this fingerprint matches your server:\n%1$s</string>
+    <string name="error_detail_crash_loop" translatable="false">The web page renderer stopped several times in a few minutes. Retrying less often.</string>
+    <string name="error_retrying_in" translatable="false">Retrying in %1$d s</string>
+    <string name="error_waiting_for_network" translatable="false">Waiting for network…</string>
+    <string name="error_retry_now" translatable="false">Retry now</string>
+    <string name="error_trust_certificate" translatable="false">Trust this certificate</string>
+
+    <!-- First run -->
+    <string name="setup_title">Not set up yet</string>
+    <string name="setup_message">Enter the address of your Home Assistant (for example http://192.168.1.10:8123) to show your dashboard here.</string>
+    <string name="setup_open_settings">Open settings</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_close">Close</string>
+    <string name="settings_loading">Loading…</string>
+    <string name="settings_version">Version %1$s · %2$s</string>
+    <string name="settings_save">Save</string>
+    <string name="settings_saved">Saved</string>
+    <string name="settings_saved_with_password">Saved. The password is stored encrypted and won’t be shown again.</string>
+    <string name="settings_invalid">Please fix the highlighted fields.</string>
+    <string name="settings_required">Required</string>
+    <string name="settings_optional">Optional</string>
+    <string name="settings_status_dashboard_ok">Dashboard: set up</string>
+    <string name="settings_status_dashboard_missing">Dashboard: not set up</string>
+    <string name="settings_status_viewport">Dashboard viewport: %1$s × %2$s CSS px · %3$s dpi (device pixel ratio %4$s)</string>
+    <string name="settings_discard_title">Discard changes?</string>
+    <string name="settings_discard_message">You have unsaved changes. They will be lost.</string>
+    <string name="settings_discard">Discard</string>
+    <string name="settings_keep_editing">Keep editing</string>
+
+    <!-- Settings: 1 Dashboard -->
+    <string name="settings_section_dashboard">Dashboard</string>
+    <string name="settings_start_url">Home Assistant URL *</string>
+    <string name="settings_start_url_help">Required. The dashboard to show, e.g. http://192.168.1.10:8123/lovelace/0</string>
+
+    <!-- Settings: 2 Home Assistant integration -->
+    <string name="settings_section_mqtt">Home Assistant integration (MQTT)</string>
+    <string name="settings_mqtt_enabled">Connect to Home Assistant</string>
+    <string name="settings_mqtt_enabled_help">Reports battery and status to Home Assistant and lets it control this panel.</string>
+    <string name="settings_mqtt_host">Broker address *</string>
+    <string name="settings_mqtt_host_help">Required. Usually your Home Assistant’s IP address; add :port if it isn’t 1883.</string>
+    <string name="settings_mqtt_username">Username *</string>
+    <string name="settings_mqtt_username_help">Required. The MQTT user you created in Home Assistant.</string>
+    <string name="settings_mqtt_password">Password *</string>
+    <string name="settings_mqtt_password_help">Required. Stored encrypted and never shown again.</string>
+    <string name="settings_mqtt_password_saved_help">A password is saved. Leave empty to keep it, or type a new one.</string>
+    <string name="settings_mqtt_show_password">Show password</string>
+    <string name="settings_mqtt_test">Test connection</string>
+    <string name="settings_mqtt_test_help">Tries the values above without saving them.</string>
+    <string name="settings_mqtt_testing">Testing…</string>
+    <string name="settings_mqtt_test_ok">Connection successful: the broker accepted the login.</string>
+    <string name="settings_mqtt_test_failed" translatable="false">Connection failed: %1$s</string>
+    <string name="mqtt_status_disabled">MQTT: off</string>
+    <string name="mqtt_status_not_configured">MQTT: not configured</string>
+    <string name="mqtt_status_waiting">MQTT: waiting for network</string>
+    <string name="mqtt_status_connecting">MQTT: connecting…</string>
+    <string name="mqtt_status_connected">MQTT: connected</string>
+    <string name="mqtt_status_failed" translatable="false">MQTT error: %1$s (retry in %2$d s)</string>
+    <string name="settings_battery_title">Battery optimization</string>
+    <string name="settings_battery_optimized">Optimized: Android may pause the connection when the screen is off.</string>
+    <string name="settings_battery_fix">Change</string>
+
+    <!-- Settings: 3 Display & behaviour -->
+    <string name="settings_text_zoom">Text size %</string>
+    <string name="settings_text_zoom_help">Size of text on the page, 50–300. 100 = normal.</string>
+
+    <!-- Settings: 4 Additional dashboards -->
+
+    <!-- Settings: Advanced -->
+    <string name="settings_pinned_certificate">Pinned certificate SHA-256: %1$s</string>
+    <string name="settings_forget_certificate">Forget pinned certificate</string>
+    <string name="settings_device_id">Device ID: %1$s</string>
+
+    <!-- Settings: screen and night mode -->
+    <string name="settings_section_screen">Screen</string>
+    <string name="screen_status">Now: brightness %1$d %%</string>
+    <string name="screen_brightness_mode">Brightness</string>
+    <string name="screen_brightness_mode_help">Follow Android uses Android’s brightness, including its adaptive brightness. Setting the brightness from Home Assistant switches to Fixed.</string>
+    <string name="screen_brightness_system">Follow Android (incl. adaptive brightness)</string>
+    <string name="screen_brightness_manual">Fixed</string>
+    <string name="screen_manual_brightness">Fixed brightness (%)</string>
+    <string name="screen_manual_brightness_help">0–100. Also settable from Home Assistant.</string>
+    <string name="screen_night">Night mode</string>
+    <string name="screen_night_help">At night the screen is black and the dashboard goes back to its start page. A touch wakes it for a minute.</string>
+    <string name="screen_night_now_night">Now: night.</string>
+    <string name="screen_night_now_day">Now: day.</string>
+    <string name="screen_night_start">Night from</string>
+    <string name="screen_night_start_help">24-hour time, e.g. 22:00.</string>
+    <string name="screen_night_end">Night until</string>
+    <string name="screen_night_end_help">E.g. 06:30. The same as the start = never night.</string>
+
+    <!-- Settings protection (PIN) -->
+    <string name="settings_section_protection">Settings protection</string>
+    <string name="protection_no_pin_notice">No PIN is set, so anyone at the panel can open Settings with 5 quick taps in the top-right corner. Setting a PIN is recommended.</string>
+    <string name="protection_pin_set">Settings are protected by a PIN.</string>
+    <string name="protection_set_pin">Set PIN</string>
+    <string name="protection_change_pin">Change PIN</string>
+    <string name="protection_remove_pin">Remove PIN</string>
+    <string name="protection_help">4–8 digits. Forgot it? See the setup guide: an adb command removes it, or clear the app’s data in Android settings.</string>
+    <string name="pin_new">New PIN</string>
+    <string name="pin_repeat">Repeat PIN</string>
+    <string name="pin_invalid">Use 4–8 digits.</string>
+    <string name="pin_mismatch">The PINs don’t match.</string>
+    <string name="pin_saved">PIN saved.</string>
+    <string name="pin_save_failed" translatable="false">The PIN could not be saved.</string>
+    <string name="pin_removed">PIN removed.</string>
+    <string name="pin_lost_notice">The saved PIN could not be read, so Settings opened without it. Please set a new PIN under Settings protection.</string>
+    <string name="pin_prompt_title">Enter PIN</string>
+    <string name="pin_wrong">Wrong PIN</string>
+    <string name="pin_locked">Too many attempts. Try again in %1$s s.</string>
+    <string name="pin_ok">OK</string>
+    <string name="pin_cancel">Cancel</string>
+
+    <!-- Kiosk lock -->
+    <string name="settings_section_kiosk">Kiosk lock</string>
+    <string name="kiosk_not_owner">Keeps the dashboard in front: no status bar, notifications, Home or other apps. It needs the app to be device owner, set up once from a PC with adb; see the setup guide. Without it, everything else works as usual.</string>
+    <string name="kiosk_state_off">This app is device owner. Kiosk lock is off: the tablet works like a normal tablet.</string>
+    <string name="kiosk_state_on">Kiosk lock is on; it starts when the dashboard is shown.</string>
+    <string name="kiosk_state_active">Kiosk lock is on: only the dashboard can be used. The power button menu still works.</string>
+    <string name="kiosk_state_unlocked">Kiosk lock is on but temporarily unlocked.</string>
+    <string name="kiosk_state_still_locked">The lock could not be released yet. Go back to the dashboard and open Settings again; if it persists, see the setup guide (ways back).</string>
+    <string name="kiosk_unlocked_until">Locks again at %1$s.</string>
+    <string name="kiosk_lock">Kiosk lock</string>
+    <string name="kiosk_lock_help">Stays as you set it, also after restarts. Home Assistant can’t switch it off.</string>
+    <string name="kiosk_needs_pin">Set a PIN under Settings protection first; the kiosk lock needs one.</string>
+    <string name="kiosk_unlock">Unlock for 15 minutes</string>
+    <string name="kiosk_relock">Lock now</string>
+    <string name="kiosk_open_android_settings">Open Android settings</string>
+    <string name="kiosk_locked_hint">While locked, Android screens (permissions, battery, Wi-Fi) can’t open. Unlock for 15 minutes first. Opening Android settings unlocks for 15 minutes.</string>
+    <string name="kiosk_remove_owner">Remove device owner permanently</string>
+    <string name="kiosk_remove_owner_help">Turns the tablet back into a normal tablet. The app stays installed; the kiosk lock can only return after setting up device owner again from a PC.</string>
+    <string name="kiosk_remove_owner_confirm">The kiosk lock is switched off and the app stops being device owner. Setting it up again needs adb and a tablet without accounts. Continue?</string>
+    <string name="kiosk_remove_owner_yes">Remove</string>
+    <string name="pin_remove_unlocks_kiosk">The kiosk lock needs a PIN, so removing the PIN also switches the kiosk lock off. Continue?</string>
+
+    <!-- Logs -->
+    <string name="logs_title">Logs</string>
+    <string name="logs_open">View logs</string>
+    <string name="logs_help">What the app did recently (connections, reloads, restarts, kiosk lock). Kept on the tablet only, up to about 2 MB.</string>
+    <string name="logs_refresh">Refresh</string>
+    <string name="logs_empty">No log entries yet.</string>
+    <string name="logs_filter_all">All</string>
+    <string name="logs_filter_warnings">Warnings</string>
+    <string name="logs_filter_errors">Errors</string>
+
+    <!-- Settings: actions -->
+    <string name="settings_section_actions">Actions</string>
+    <string name="settings_reload">Reload dashboard</string>
+    <string name="settings_go_start">Go to start page</string>
+    <string name="settings_clear_cache">Clear web cache</string>
+
+    <!-- Connection service notification -->
+    <string name="service_channel_name">Home Assistant connection</string>
+    <string name="service_notification_text">Connected to your Home Assistant</string>
+
+    <!-- Debug builds only -->
+    <string name="debug_section_title">Debug build only</string>
+    <string name="debug_open_android_settings">Open Android settings</string>
+    <string name="debug_open_home_picker">Choose Home app</string>
+    <string name="debug_crash_renderer">Simulate renderer crash</string>
+    <string name="debug_hang_renderer">Simulate page hang</string>
+    <string name="debug_crash_app">Simulate app crash</string>
+</resources>

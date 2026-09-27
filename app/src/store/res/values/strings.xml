@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="battery_optimization_store_hint">In the list, switch to “All apps”, choose %1$s and select “Don’t optimize”.</string>
+</resources>

@@ -1,0 +1,1 @@
+Simpler Home Assistant integration: only Battery, Battery temperature, Night mode, Screen brightness, Wake screen and Reload remain. The other entities are removed from Home Assistant automatically.

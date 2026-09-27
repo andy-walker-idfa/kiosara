@@ -1,0 +1,1 @@
+Spořič (hodiny, ztlumení nebo černá), noční režim s vlastním rozvrhem nebo řízený Home Assistantem, automatický jas podle senzoru světla a dotyk, který obrazovku vždy probudí. Nové entity v Home Assistantu pro obrazovku a okolní světlo a blueprinty pro probuzení pohybem a den/noc. Jas nastavený z Home Assistantu nyní vydrží restart.

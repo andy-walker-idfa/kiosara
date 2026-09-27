@@ -1,0 +1,1 @@
+Removed the "Wake screen" button and the wake-on-motion blueprint. Home Assistant deletes the entity automatically. The panel now has five entities: Battery, Battery temperature, Night mode, Screen brightness and Reload.

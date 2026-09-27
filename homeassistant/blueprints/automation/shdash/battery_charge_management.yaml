@@ -1,0 +1,319 @@
+blueprint:
+  name: "Kiosara: battery charge guard"
+  description: >-
+    Keeps a wall-mounted tablet's battery between two levels by switching its charger smart plug,
+    instead of holding it at 100 % (which ages Li-ion batteries and can make them swell).
+
+
+    **Safety:** at or above the maximum temperature, charging is cut, an "overheat lock" helper is
+    switched on and you are notified. Charging never happens at or above that temperature. The lock
+    clears by itself once the battery has cooled down (or switch it off yourself). If the battery gets
+    critically low while locked but below the maximum temperature, emergency charging is allowed.
+
+
+    **Fail-safe:** if the tablet stays offline, the plug is switched on (never while the overheat lock
+    is on). Everything is re-evaluated when Home Assistant starts and every 5 minutes.
+
+
+    **Before importing:** create a Toggle helper (Settings → Devices & services → Helpers → Create
+    helper → Toggle), e.g. "Wall panel overheat lock". Set your plug's power-on behavior to "On".
+  domain: automation
+  author: Kiosara
+  source_url: https://github.com/andy-walker-idfa/kiosara/blob/main/homeassistant/blueprints/automation/shdash/battery_charge_management.yaml
+  homeassistant:
+    min_version: "2024.10.0"
+  input:
+    tablet:
+      name: Tablet
+      icon: mdi:tablet
+      input:
+        battery_level:
+          name: Battery level sensor
+          description: The tablet's "Battery" sensor (device class battery, %).
+          selector:
+            entity:
+              filter:
+                - domain: sensor
+                  device_class: battery
+        battery_temperature:
+          name: Battery temperature sensor
+          description: The tablet's "Battery temperature" sensor (°C).
+          selector:
+            entity:
+              filter:
+                - domain: sensor
+                  device_class: temperature
+    charger:
+      name: Charger
+      icon: mdi:power-socket-eu
+      input:
+        charger_switch:
+          name: Charger plug
+          description: The switch entity of the smart plug that powers the tablet's charger.
+          selector:
+            entity:
+              filter:
+                - domain: switch
+        overheat_lock:
+          name: Overheat lock
+          description: >-
+            A Toggle helper you created for this automation. It remembers an overheat across restarts
+            and while the tablet is offline.
+          selector:
+            entity:
+              filter:
+                - domain: input_boolean
+    thresholds:
+      name: Thresholds
+      icon: mdi:tune-variant
+      input:
+        low_level:
+          name: Start charging at or below
+          default: 40
+          selector:
+            number:
+              min: 10
+              max: 90
+              unit_of_measurement: "%"
+              mode: slider
+        high_level:
+          name: Stop charging at or above
+          default: 80
+          selector:
+            number:
+              min: 20
+              max: 100
+              unit_of_measurement: "%"
+              mode: slider
+        max_temperature:
+          name: Maximum battery temperature
+          description: At or above this temperature the plug is always switched off.
+          default: 40
+          selector:
+            number:
+              min: 30
+              max: 50
+              unit_of_measurement: "°C"
+              mode: box
+        temp_hysteresis:
+          name: Resume after cooling by
+          description: The overheat lock clears at or below (maximum − this value).
+          default: 5
+          selector:
+            number:
+              min: 2
+              max: 15
+              unit_of_measurement: "°C"
+              mode: box
+        emergency_level:
+          name: Emergency charging at or below
+          description: >-
+            While the overheat lock is on, charging is still allowed at or below this level if the
+            temperature is below the maximum (charges up to this level + 10 %).
+          default: 15
+          selector:
+            number:
+              min: 5
+              max: 40
+              unit_of_measurement: "%"
+              mode: slider
+        warn_level:
+          name: Low-battery warning below
+          default: 20
+          selector:
+            number:
+              min: 5
+              max: 50
+              unit_of_measurement: "%"
+              mode: slider
+        unavailable_minutes:
+          name: Fail-safe after the tablet is offline for
+          default: 30
+          selector:
+            number:
+              min: 5
+              max: 240
+              unit_of_measurement: min
+              mode: box
+    notifications:
+      name: Notifications
+      icon: mdi:bell-outline
+      collapsed: true
+      input:
+        notify_action:
+          name: Notify action (optional)
+          description: >-
+            E.g. notify.mobile_app_your_phone. Leave empty for persistent notifications in Home
+            Assistant only.
+          default: ""
+          selector:
+            text: {}
+
+mode: queued
+max: 3
+max_exceeded: silent
+
+triggers:
+  - trigger: state
+    entity_id:
+      - !input battery_level
+      - !input battery_temperature
+      - !input charger_switch
+      - !input overheat_lock
+    to: ~
+  - trigger: homeassistant
+    event: start
+  - trigger: event
+    event_type: automation_reloaded
+  - trigger: time_pattern
+    minutes: "/5"
+  - trigger: numeric_state
+    entity_id: !input battery_level
+    below: !input warn_level
+    for:
+      minutes: 2
+    id: warn
+
+variables:
+  level_entity: !input battery_level
+  temp_entity: !input battery_temperature
+  plug: !input charger_switch
+  lock: !input overheat_lock
+  low: !input low_level
+  high: !input high_level
+  tmax: !input max_temperature
+  hysteresis: !input temp_hysteresis
+  emergency: !input emergency_level
+  emergency_band: 10
+  offline_minutes: !input unavailable_minutes
+  notify_action: !input notify_action
+  level: "{{ states(level_entity) | float(-1) }}"
+  temp: "{{ states(temp_entity) | float(-100) }}"
+  level_ok: "{{ has_value(level_entity) }}"
+  temp_ok: "{{ has_value(temp_entity) }}"
+  locked: "{{ is_state(lock, 'on') }}"
+  plug_on: "{{ is_state(plug, 'on') }}"
+  plug_off: "{{ is_state(plug, 'off') }}"
+  # Non-safety switching only if the plug has not changed for 2 minutes (avoids rapid toggling).
+  settled: >-
+    {{ states[plug] is not none and (now() - states[plug].last_changed).total_seconds() > 120 }}
+  tablet_lost: >-
+    {{ not level_ok and states[level_entity] is not none
+       and (now() - states[level_entity].last_changed).total_seconds() > offline_minutes * 60 }}
+
+actions:
+  - choose:
+      # 1. Too hot: charging off, lock on, notify once.
+      - conditions: "{{ temp_ok and temp >= tmax }}"
+        sequence:
+          - if: "{{ not plug_off }}"
+            then:
+              - action: switch.turn_off
+                target:
+                  entity_id: "{{ plug }}"
+          - if: "{{ not locked }}"
+            then:
+              - action: input_boolean.turn_on
+                target:
+                  entity_id: "{{ lock }}"
+              - action: persistent_notification.create
+                data:
+                  notification_id: shdash_battery_overheat
+                  title: Wall panel overheating
+                  message: "Battery at {{ temp }} °C: charging stopped until it cools to {{ tmax - hysteresis }} °C."
+              - if: "{{ notify_action != '' }}"
+                then:
+                  - action: "{{ notify_action }}"
+                    continue_on_error: true
+                    data:
+                      title: Wall panel overheating
+                      message: "Battery at {{ temp }} °C: charging stopped."
+
+      # 2. Cooled down: clear the lock (charging decisions follow on the next evaluation).
+      - conditions: "{{ locked and temp_ok and temp <= tmax - hysteresis }}"
+        sequence:
+          - action: input_boolean.turn_off
+            target:
+              entity_id: "{{ lock }}"
+          - action: persistent_notification.dismiss
+            data:
+              notification_id: shdash_battery_overheat
+
+      # 3. Locked but critically low and below the maximum temperature: emergency charging.
+      - conditions: >-
+          {{ locked and level_ok and temp_ok and temp < tmax
+             and (level <= emergency or (plug_on and level < emergency + emergency_band)) }}
+        sequence:
+          - if: "{{ not plug_on }}"
+            then:
+              - action: switch.turn_on
+                target:
+                  entity_id: "{{ plug }}"
+              - action: persistent_notification.create
+                data:
+                  notification_id: shdash_battery_emergency
+                  title: Wall panel emergency charging
+                  message: "Battery at {{ level | int }} % while the overheat lock is on ({{ temp }} °C): charging up to {{ (emergency + emergency_band) | int }} %."
+              - if: "{{ notify_action != '' }}"
+                then:
+                  - action: "{{ notify_action }}"
+                    continue_on_error: true
+                    data:
+                      title: Wall panel emergency charging
+                      message: "Battery at {{ level | int }} %, {{ temp }} °C: emergency charging."
+
+      # 4. Locked (still warm, or temperature unknown): keep the plug off, no fail-safe.
+      - conditions: "{{ locked }}"
+        sequence:
+          - if: "{{ plug_on }}"
+            then:
+              - action: switch.turn_off
+                target:
+                  entity_id: "{{ plug }}"
+
+      # 5. Tablet offline for too long: fail-safe on, so it can't run flat.
+      - conditions: "{{ tablet_lost and not plug_on }}"
+        sequence:
+          - action: switch.turn_on
+            target:
+              entity_id: "{{ plug }}"
+          - action: persistent_notification.create
+            data:
+              notification_id: shdash_battery_offline
+              title: Wall panel offline
+              message: "The tablet has been offline for over {{ offline_minutes | int }} minutes: charger switched on as a precaution."
+          - if: "{{ notify_action != '' }}"
+            then:
+              - action: "{{ notify_action }}"
+                continue_on_error: true
+                data:
+                  title: Wall panel offline
+                  message: "Tablet offline for over {{ offline_minutes | int }} min: charger switched on."
+
+      # 6. Normal charging window.
+      - conditions: "{{ level_ok and low < high and level <= low and not plug_on and settled }}"
+        sequence:
+          - action: switch.turn_on
+            target:
+              entity_id: "{{ plug }}"
+      - conditions: "{{ level_ok and low < high and level >= high and plug_on and settled }}"
+        sequence:
+          - action: switch.turn_off
+            target:
+              entity_id: "{{ plug }}"
+
+  # Low-battery warning (e.g. the plug stopped working).
+  - if: "{{ trigger is defined and trigger.id == 'warn' }}"
+    then:
+      - action: persistent_notification.create
+        data:
+          notification_id: shdash_battery_low
+          title: Wall panel battery low
+          message: "Battery at {{ level | int }} %. Check the charger plug."
+      - if: "{{ notify_action != '' }}"
+        then:
+          - action: "{{ notify_action }}"
+            continue_on_error: true
+            data:
+              title: Wall panel battery low
+              message: "Battery at {{ level | int }} %. Check the charger plug."

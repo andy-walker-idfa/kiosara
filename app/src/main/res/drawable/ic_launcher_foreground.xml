@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Neutral placeholder icon until the final brand is chosen: a wall panel (rounded frame) with four
+  dashboard tiles. Drawn inside the 66dp adaptive-icon safe zone. Also used as the monochrome layer.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Panel frame -->
+    <path
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="4"
+        android:fillColor="#00000000"
+        android:pathData="M33,32 H75 A5,5 0 0 1 80,37 V71 A5,5 0 0 1 75,76 H33 A5,5 0 0 1 28,71 V37 A5,5 0 0 1 33,32 Z" />
+    <!-- Tiles -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M36,40 H51 V52 H36 Z M57,40 H72 V52 H57 Z M36,56 H51 V68 H36 Z M57,56 H72 V68 H57 Z" />
+</vector>

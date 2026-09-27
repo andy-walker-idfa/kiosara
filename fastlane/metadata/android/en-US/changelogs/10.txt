@@ -1,0 +1,1 @@
+Log files: Settings → Logs shows what the app did recently (connections, reloads, restarts, kiosk lock), with filters for warnings and errors. Kept on the tablet only. New "App memory" sensor and a "Wall panel alerts" blueprint that notifies when the panel is offline or recovered from a problem.

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Kiosara</string>
+
+    <!-- Error overlay strings are English-only by design (translatable="false" in values/strings.xml). -->
+
+    <!-- First run -->
+    <string name="setup_title">Zatím nenastaveno</string>
+    <string name="setup_message">Zadejte adresu svého Home Assistantu (například http://192.168.1.10:8123), aby se zde zobrazil váš dashboard.</string>
+    <string name="setup_open_settings">Otevřít nastavení</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Nastavení</string>
+    <string name="settings_close">Zavřít</string>
+    <string name="settings_loading">Načítám…</string>
+    <string name="settings_version">Verze %1$s · %2$s</string>
+    <string name="settings_save">Uložit</string>
+    <string name="settings_saved">Uloženo</string>
+    <string name="settings_saved_with_password">Uloženo. Heslo je uloženo šifrovaně a znovu se nezobrazí.</string>
+    <string name="settings_invalid">Opravte prosím zvýrazněná pole.</string>
+    <string name="settings_required">Povinné</string>
+    <string name="settings_optional">Volitelné</string>
+    <string name="settings_status_dashboard_ok">Dashboard: nastaven</string>
+    <string name="settings_status_dashboard_missing">Dashboard: nenastaven</string>
+    <string name="settings_status_viewport">Viewport dashboardu: %1$s × %2$s CSS px · %3$s dpi (poměr pixelů %4$s)</string>
+    <string name="settings_discard_title">Zahodit změny?</string>
+    <string name="settings_discard_message">Máte neuložené změny. Budou ztraceny.</string>
+    <string name="settings_discard">Zahodit</string>
+    <string name="settings_keep_editing">Pokračovat v úpravách</string>
+
+    <!-- Settings: 1 Dashboard -->
+    <string name="settings_section_dashboard">Dashboard</string>
+    <string name="settings_start_url">Adresa Home Assistantu *</string>
+    <string name="settings_start_url_help">Povinné. Dashboard, který se má zobrazit, např. http://192.168.1.10:8123/lovelace/0</string>
+
+    <!-- Settings: 2 Home Assistant integration -->
+    <string name="settings_section_mqtt">Integrace s Home Assistantem (MQTT)</string>
+    <string name="settings_mqtt_enabled">Připojit k Home Assistantu</string>
+    <string name="settings_mqtt_enabled_help">Hlásí baterii a stav do Home Assistantu a umožní mu tento panel ovládat.</string>
+    <string name="settings_mqtt_host">Adresa brokeru *</string>
+    <string name="settings_mqtt_host_help">Povinné. Obvykle IP adresa vašeho Home Assistantu; připište :port, pokud není 1883.</string>
+    <string name="settings_mqtt_username">Uživatelské jméno *</string>
+    <string name="settings_mqtt_username_help">Povinné. MQTT uživatel, kterého jste vytvořili v Home Assistantu.</string>
+    <string name="settings_mqtt_password">Heslo *</string>
+    <string name="settings_mqtt_password_help">Povinné. Ukládá se šifrovaně a znovu se nezobrazí.</string>
+    <string name="settings_mqtt_password_saved_help">Heslo je uloženo. Ponechte prázdné pro zachování, nebo zadejte nové.</string>
+    <string name="settings_mqtt_show_password">Zobrazit heslo</string>
+    <string name="settings_mqtt_test">Otestovat připojení</string>
+    <string name="settings_mqtt_test_help">Vyzkouší zadané hodnoty bez uložení.</string>
+    <string name="settings_mqtt_testing">Testuji…</string>
+    <string name="settings_mqtt_test_ok">Připojení funguje: broker přijal přihlášení.</string>
+    <string name="mqtt_status_disabled">MQTT: vypnuto</string>
+    <string name="mqtt_status_not_configured">MQTT: nenastaveno</string>
+    <string name="mqtt_status_waiting">MQTT: čekám na síť</string>
+    <string name="mqtt_status_connecting">MQTT: připojuji…</string>
+    <string name="mqtt_status_connected">MQTT: připojeno</string>
+    <string name="settings_battery_title">Optimalizace baterie</string>
+    <string name="settings_battery_optimized">Optimalizováno: Android může spojení při vypnuté obrazovce pozastavit.</string>
+    <string name="settings_battery_fix">Změnit</string>
+
+    <!-- Settings: 3 Display & behaviour -->
+    <string name="settings_text_zoom">Velikost textu %</string>
+    <string name="settings_text_zoom_help">Velikost textu na stránce, 50–300. 100 = normální.</string>
+
+    <!-- Settings: 4 Additional dashboards -->
+
+    <!-- Settings: Advanced -->
+    <string name="settings_pinned_certificate">Připnutý certifikát SHA-256: %1$s</string>
+    <string name="settings_forget_certificate">Zapomenout připnutý certifikát</string>
+    <string name="settings_device_id">ID zařízení: %1$s</string>
+
+    <!-- Settings: screen and night mode -->
+    <string name="settings_section_screen">Obrazovka</string>
+    <string name="screen_status">Nyní: jas %1$d %%</string>
+    <string name="screen_brightness_mode">Jas</string>
+    <string name="screen_brightness_mode_help">Podle Androidu používá jas Androidu včetně adaptivního jasu. Nastavení jasu z Home Assistantu přepne na Pevný.</string>
+    <string name="screen_brightness_system">Podle Androidu (vč. adaptivního jasu)</string>
+    <string name="screen_brightness_manual">Pevný</string>
+    <string name="screen_manual_brightness">Pevný jas (%)</string>
+    <string name="screen_manual_brightness_help">0–100. Lze nastavit i z Home Assistantu.</string>
+    <string name="screen_night">Noční režim</string>
+    <string name="screen_night_help">V noci je obrazovka černá a dashboard se vrátí na úvodní stránku. Dotyk ji na minutu probudí.</string>
+    <string name="screen_night_now_night">Nyní: noc.</string>
+    <string name="screen_night_now_day">Nyní: den.</string>
+    <string name="screen_night_start">Noc od</string>
+    <string name="screen_night_start_help">24hodinový čas, např. 22:00.</string>
+    <string name="screen_night_end">Noc do</string>
+    <string name="screen_night_end_help">Např. 06:30. Stejné jako začátek = nikdy noc.</string>
+
+    <!-- Settings protection (PIN) -->
+    <string name="settings_section_protection">Ochrana nastavení</string>
+    <string name="protection_no_pin_notice">PIN není nastaven, takže kdokoli u panelu otevře nastavení 5 rychlými klepnutími do pravého horního rohu. Doporučujeme nastavit PIN.</string>
+    <string name="protection_pin_set">Nastavení je chráněno PINem.</string>
+    <string name="protection_set_pin">Nastavit PIN</string>
+    <string name="protection_change_pin">Změnit PIN</string>
+    <string name="protection_remove_pin">Odebrat PIN</string>
+    <string name="protection_help">4–8 číslic. Zapomněli jste ho? Viz průvodce nastavením: odebere ho příkaz adb, nebo vymažte data aplikace v nastavení Androidu.</string>
+    <string name="pin_new">Nový PIN</string>
+    <string name="pin_repeat">PIN znovu</string>
+    <string name="pin_invalid">Použijte 4–8 číslic.</string>
+    <string name="pin_mismatch">PINy se neshodují.</string>
+    <string name="pin_saved">PIN uložen.</string>
+    <string name="pin_removed">PIN odebrán.</string>
+    <string name="pin_lost_notice">Uložený PIN nešlo přečíst, proto se nastavení otevřelo bez něj. Nastavte prosím nový PIN v části Ochrana nastavení.</string>
+    <string name="pin_prompt_title">Zadejte PIN</string>
+    <string name="pin_wrong">Nesprávný PIN</string>
+    <string name="pin_locked">Příliš mnoho pokusů. Zkuste to znovu za %1$s s.</string>
+    <string name="pin_ok">OK</string>
+    <string name="pin_cancel">Zrušit</string>
+
+    <!-- Kiosk lock -->
+    <string name="settings_section_kiosk">Zámek kiosku</string>
+    <string name="kiosk_not_owner">Drží dashboard v popředí: bez stavového řádku, oznámení, tlačítka Domů a jiných aplikací. Aplikace k tomu musí být vlastníkem zařízení, což se jednou nastaví z počítače přes adb; viz průvodce nastavením. Bez toho vše ostatní funguje jako obvykle.</string>
+    <string name="kiosk_state_off">Tato aplikace je vlastníkem zařízení. Zámek kiosku je vypnutý: tablet funguje jako běžný tablet.</string>
+    <string name="kiosk_state_on">Zámek kiosku je zapnutý; začne platit, až se zobrazí dashboard.</string>
+    <string name="kiosk_state_active">Zámek kiosku je zapnutý: lze používat jen dashboard. Nabídka tlačítka napájení funguje dál.</string>
+    <string name="kiosk_state_unlocked">Zámek kiosku je zapnutý, ale dočasně odemčený.</string>
+    <string name="kiosk_state_still_locked">Zámek se zatím nepodařilo uvolnit. Vraťte se na dashboard a znovu otevřete nastavení; pokud to trvá, viz průvodce nastavením (cesty zpět).</string>
+    <string name="kiosk_unlocked_until">Znovu se zamkne v %1$s.</string>
+    <string name="kiosk_lock">Zámek kiosku</string>
+    <string name="kiosk_lock_help">Zůstane, jak ho nastavíte, i po restartu. Home Assistant ho vypnout nemůže.</string>
+    <string name="kiosk_needs_pin">Nejdřív nastavte PIN v části Ochrana nastavení; zámek kiosku ho vyžaduje.</string>
+    <string name="kiosk_unlock">Odemknout na 15 minut</string>
+    <string name="kiosk_relock">Zamknout hned</string>
+    <string name="kiosk_open_android_settings">Otevřít nastavení Androidu</string>
+    <string name="kiosk_locked_hint">Když je zamčeno, obrazovky Androidu (oprávnění, baterie, Wi-Fi) se neotevřou. Nejdřív odemkněte na 15 minut. Otevření nastavení Androidu odemkne na 15 minut.</string>
+    <string name="kiosk_remove_owner">Trvale odebrat vlastníka zařízení</string>
+    <string name="kiosk_remove_owner_help">Vrátí tablet do běžného stavu. Aplikace zůstane nainstalovaná; zámek kiosku se vrátí jen po novém nastavení vlastníka zařízení z počítače.</string>
+    <string name="kiosk_remove_owner_confirm">Zámek kiosku se vypne a aplikace přestane být vlastníkem zařízení. Nové nastavení vyžaduje adb a tablet bez účtů. Pokračovat?</string>
+    <string name="kiosk_remove_owner_yes">Odebrat</string>
+    <string name="pin_remove_unlocks_kiosk">Zámek kiosku vyžaduje PIN, takže odebráním PINu se vypne i zámek kiosku. Pokračovat?</string>
+
+    <!-- Logs -->
+    <string name="logs_title">Záznamy</string>
+    <string name="logs_open">Zobrazit záznamy</string>
+    <string name="logs_help">Co aplikace v poslední době dělala (připojení, obnovení, restarty, zámek kiosku). Uloženo jen v tabletu, nejvýše asi 2 MB.</string>
+    <string name="logs_refresh">Obnovit</string>
+    <string name="logs_empty">Zatím žádné záznamy.</string>
+    <string name="logs_filter_all">Vše</string>
+    <string name="logs_filter_warnings">Varování</string>
+    <string name="logs_filter_errors">Chyby</string>
+
+    <!-- Settings: actions -->
+    <string name="settings_section_actions">Akce</string>
+    <string name="settings_reload">Obnovit dashboard</string>
+    <string name="settings_go_start">Na úvodní stránku</string>
+    <string name="settings_clear_cache">Vymazat webovou mezipaměť</string>
+
+    <!-- Connection service notification -->
+    <string name="service_channel_name">Připojení k Home Assistantu</string>
+    <string name="service_notification_text">Připojeno k vašemu Home Assistantu</string>
+
+    <!-- Debug builds only -->
+    <string name="debug_section_title">Pouze ladicí sestavení</string>
+    <string name="debug_open_android_settings">Otevřít nastavení Androidu</string>
+    <string name="debug_open_home_picker">Vybrat domovskou aplikaci</string>
+    <string name="debug_crash_renderer">Simulovat pád vykreslování</string>
+    <string name="debug_hang_renderer">Simulovat zamrznutí stránky</string>
+    <string name="debug_crash_app">Simulovat pád aplikace</string>
+</resources>

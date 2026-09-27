@@ -1,0 +1,1 @@
+Nové ID aplikace (nutná přeinstalace), pracovní název „Wall Panel“ s novou ikonou. První spuštění se nyní zeptá na adresu Home Assistantu. Název a ID zařízení v nastavení. Reprodukovatelná sestavení.

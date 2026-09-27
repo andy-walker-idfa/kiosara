@@ -1,0 +1,1 @@
+První veřejné vydání (beta): v aktivním testování, denně běží na autorově nástěnném panelu. Nový název Kiosara. Bezpečnostní opravy: „Důvěřovat certifikátu“ vyžaduje PIN, bezpečnější zpracování chyb úložiště klíčů, příliš velkých MQTT zpráv a řádků logu. Statistiky WebView jsou vypnuté. Stávající nastavení funguje dál.

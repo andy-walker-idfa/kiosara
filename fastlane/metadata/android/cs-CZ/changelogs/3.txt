@@ -1,0 +1,1 @@
+Integrace s Home Assistantem přes MQTT: tablet se objeví jako zařízení se senzory baterie, teploty, Wi-Fi, systému a dashboardu a s ovládáním (jas, obnovení, dashboard). Součástí je blueprint pro řízení nabíjení s ochranou proti přehřátí.

@@ -1,0 +1,1 @@
+Jednodušší napojení na Home Assistant: zůstávají jen Baterie, Teplota baterie, Noční režim, Jas obrazovky, Probudit obrazovku a Obnovit. Ostatní entity se z Home Assistantu odstraní automaticky.

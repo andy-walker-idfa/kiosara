@@ -1,0 +1,1 @@
+First public release (beta): in active testing, running daily on the author's wall panel. New name Kiosara. Security fixes: "Trust this certificate" asks for the PIN, safer handling of Keystore errors, oversized MQTT messages and log lines. WebView usage statistics are off. Existing setups keep working.

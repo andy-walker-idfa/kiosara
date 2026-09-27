@@ -1,0 +1,1 @@
+Home Assistant integration via MQTT: the tablet appears as a device with battery, temperature, Wi-Fi, system and dashboard sensors and controls (brightness, reload, dashboard). Includes a battery charge management blueprint with overheat protection.

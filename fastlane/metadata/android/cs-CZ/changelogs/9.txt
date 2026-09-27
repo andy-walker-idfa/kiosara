@@ -1,0 +1,1 @@
+Volitelný zámek kiosku: když je aplikace nastavena jako vlastník zařízení (jednou přes adb), PINem chráněný přepínač drží dashboard v popředí a blokuje stavový řádek, Domů i jiné aplikace; nabídka napájení funguje dál. Únikové cesty: odemknout na 15 minut, otevřít nastavení Androidu, odebrat vlastníka zařízení. Nový senzor „Zámek kiosku“ v Home Assistantu.

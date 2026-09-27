@@ -1,0 +1,1 @@
+Optional kiosk lock: when the app is set up as device owner (once, over adb), a PIN-protected switch keeps the dashboard in front and blocks the status bar, Home and other apps; the power menu keeps working. Escape hatches: unlock for 15 minutes, open Android settings, remove device owner. New "Kiosk lock" sensor in Home Assistant.

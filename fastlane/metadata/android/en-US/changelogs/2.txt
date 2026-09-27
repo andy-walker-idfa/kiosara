@@ -1,0 +1,1 @@
+New app ID (reinstall required), working name "Wall Panel" with a new icon. First start now asks for your Home Assistant address. Device name and ID in Settings. Reproducible builds.

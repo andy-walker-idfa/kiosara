@@ -1,0 +1,1 @@
+Jednodušší nastavení: jen adresa Home Assistantu, velikost textu, MQTT, jas, noční režim, PIN a zámek kiosku. V noci je obrazovka černá, dotyk ji na minutu probudí a dashboard se vrátí na úvodní stránku. Denní spořič, další dashboardy a pravidelné obnovení byly odstraněny. Port MQTT se píše do adresy brokeru (host:port).

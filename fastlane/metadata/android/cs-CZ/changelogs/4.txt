@@ -1,0 +1,1 @@
+Přehlednější nastavení: označená povinná pole, vysvětlení u každé volby, méně používané volby v části Pokročilé, jedno tlačítko Uložit. Nové „Otestovat připojení“ pro MQTT s přesným popisem problému. Úhlednější zobrazení čísel v Home Assistantu.

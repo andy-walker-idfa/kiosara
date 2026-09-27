@@ -1,0 +1,28 @@
+# Example "tablet status" card (built-in cards only).
+# Paste into a dashboard: Edit dashboard → Add card → Manual.
+# Entity IDs follow the device name (default "Wall panel" → sensor.wall_panel_battery).
+# Replace switch.YOUR_CHARGER_PLUG and input_boolean.YOUR_OVERHEAT_LOCK with your entities.
+type: vertical-stack
+cards:
+  - type: glance
+    title: Wall panel
+    state_color: true
+    entities:
+      - entity: sensor.wall_panel_battery
+      - entity: sensor.wall_panel_battery_temperature
+      - entity: switch.YOUR_CHARGER_PLUG
+        name: Charger
+      - entity: switch.wall_panel_night_mode
+  - type: entities
+    entities:
+      - entity: number.wall_panel_screen_brightness
+      - entity: input_boolean.YOUR_OVERHEAT_LOCK
+        name: Overheat lock
+      - type: buttons
+        entities:
+          - entity: button.wall_panel_reload
+  - type: history-graph
+    hours_to_show: 48
+    entities:
+      - entity: sensor.wall_panel_battery
+      - entity: sensor.wall_panel_battery_temperature

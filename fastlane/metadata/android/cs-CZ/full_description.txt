@@ -1,0 +1,19 @@
+Kiosara promění tablet s Androidem na zdi ve vyhrazený panel pro váš dashboard Home Assistantu. Domácí spotřebič: dělá jednu věc a má jen nastavení, která potřebujete.
+
+<b>Funkce</b>
+<ul>
+<li>Dashboard přes celou obrazovku, stále zapnutý; přihlášení do Home Assistantu přetrvá restart aplikace i zařízení</li>
+<li>Funguje jako domovská aplikace, takže se po restartu spustí automaticky</li>
+<li>Srozumitelná chybová obrazovka s automatickým opakováním místo chybových stránek prohlížeče</li>
+<li>Běží sama: zotaví se z výpadku sítě, zamrzlé stránky i pádu</li>
+<li>Noční režim: v noci černá obrazovka, kterou probudí dotyk, a ráno opět úvodní stránka</li>
+<li>Jas podle Androidu nebo pevný; nastavitelná velikost textu</li>
+<li>Volitelná integrace s Home Assistantem přes MQTT discovery: baterie, teplota baterie, noční režim, jas a obnovení</li>
+<li>Blueprint pro řízení nabíjení přes chytrou zásuvku s ochranou proti přehřátí</li>
+<li>Volitelný PIN pro nastavení a zámek kiosku, který udrží děti na dashboardu</li>
+<li>Anglické a české rozhraní</li>
+</ul>
+
+<b>Soukromí</b>: žádný sběr dat, žádná analytika, žádné reklamy, žádné hlášení pádů, žádné služby třetích stran. Aplikace komunikuje pouze s vaším vlastním Home Assistantem a MQTT brokerem. Žádná kamera ani mikrofon.
+
+Aplikace není spojena s projektem Home Assistant ani s Open Home Foundation a není jimi schválena.

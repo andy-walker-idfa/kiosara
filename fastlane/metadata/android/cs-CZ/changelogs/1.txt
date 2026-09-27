@@ -1,0 +1,1 @@
+První verze: dashboard Home Assistantu přes celou obrazovku s trvalým přihlášením, automatickým zotavením z chyb, pravidelným obnovením a funkcí domovské aplikace.

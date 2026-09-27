@@ -1,0 +1,67 @@
+name: Bug report
+description: Something doesn't work as described.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for testing Kiosara! Kiosara is a home project with best-effort support.
+        **Security problems:** please don't report them here; see SECURITY.md.
+        Please don't include passwords, tokens, your Home Assistant address or other personal data.
+  - type: input
+    id: app_version
+    attributes:
+      label: App version
+      description: Shown at the bottom of the app's Settings (e.g. "0.9.0 (github)").
+    validations:
+      required: true
+  - type: input
+    id: device
+    attributes:
+      label: Tablet model
+      description: Manufacturer and model, e.g. "Lenovo Tab M9 (TB310FU)". Android Settings → About tablet.
+    validations:
+      required: true
+  - type: input
+    id: android
+    attributes:
+      label: Android version
+      description: Android Settings → About tablet → Android version.
+    validations:
+      required: true
+  - type: input
+    id: webview
+    attributes:
+      label: Android System WebView version
+      description: Android Settings → Apps → Android System WebView (shown at the bottom). Optional but helpful.
+  - type: dropdown
+    id: kiosk
+    attributes:
+      label: Kiosk lock
+      options:
+        - Not set up (app is not device owner)
+        - Device owner, lock off
+        - Device owner, lock on
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. ...
+        2. ...
+  - type: textarea
+    id: logs
+    attributes:
+      label: Log lines (optional)
+      description: >-
+        Settings → Logs shows what the app did. Copy the lines around the problem. The app masks passwords and
+        tokens, but please check before posting.
+      render: text

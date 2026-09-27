@@ -1,0 +1,1 @@
+Simpler brightness: "Follow Android" (including Android's adaptive brightness) or a fixed level, also settable from Home Assistant. The app's own automatic brightness and the ambient light entity were removed; Home Assistant deletes the old entities automatically.

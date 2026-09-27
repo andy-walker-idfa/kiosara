@@ -1,0 +1,1 @@
+Odstraněno tlačítko „Probudit obrazovku“ a blueprint pro probuzení pohybem. Home Assistant entitu smaže automaticky. Panel má nyní pět entit: Baterie, Teplota baterie, Noční režim, Jas obrazovky a Obnovit.

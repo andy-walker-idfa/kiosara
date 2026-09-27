@@ -1,0 +1,1 @@
+Kiosk wall panel for your Home Assistant dashboard. Open source, no tracking.

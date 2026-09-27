@@ -1,0 +1,19 @@
+Kiosara turns a wall-mounted Android tablet into a dedicated panel for your Home Assistant dashboard. A home appliance: it does one job, with only the settings you need.
+
+<b>Features</b>
+<ul>
+<li>Full-screen, always-on dashboard; the Home Assistant login is kept across restarts and reboots</li>
+<li>Works as the Home app, so it starts automatically after a reboot</li>
+<li>Friendly error screen with automatic retry instead of browser error pages</li>
+<li>Runs by itself: recovers from network outages, frozen pages and crashes</li>
+<li>Night mode: a black screen at night that wakes on touch, and the start page again in the morning</li>
+<li>Brightness that follows Android or is fixed; adjustable text size</li>
+<li>Optional Home Assistant integration via MQTT discovery: battery, battery temperature, night mode, brightness and reload</li>
+<li>Battery charge management blueprint for a smart plug, with overheat protection</li>
+<li>Optional PIN-protected settings and kiosk lock that keeps children on the dashboard</li>
+<li>English and Czech interface</li>
+</ul>
+
+<b>Privacy</b>: no data collection, no analytics, no ads, no crash reporting, no third-party services. The app talks only to your own Home Assistant and MQTT broker. No camera or microphone.
+
+Not affiliated with or endorsed by Home Assistant or the Open Home Foundation.

@@ -1,0 +1,1 @@
+Shows the dashboard viewport size (CSS pixels, density) in Settings and reports it to Home Assistant, to help design dashboards that fit the screen exactly.

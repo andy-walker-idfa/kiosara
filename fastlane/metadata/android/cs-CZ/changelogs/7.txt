@@ -1,0 +1,1 @@
+Jednodušší jas: „Podle Androidu" (včetně adaptivního jasu Androidu) nebo pevná úroveň, kterou lze nastavit i z Home Assistantu. Vlastní automatický jas aplikace a entita okolního světla byly odstraněny; Home Assistant staré entity smaže automaticky.

@@ -1,0 +1,1 @@
+Simpler settings: only the Home Assistant URL, text size, MQTT, brightness, night mode, PIN and kiosk lock. At night the screen is black, a touch wakes it for a minute, and the dashboard returns to its start page. The daytime screensaver, additional dashboards and periodic reload were removed. The MQTT port goes into the broker address (host:port).

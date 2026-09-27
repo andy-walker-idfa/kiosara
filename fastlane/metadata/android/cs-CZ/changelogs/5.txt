@@ -1,0 +1,1 @@
+Zobrazuje velikost viewportu dashboardu (CSS pixely, hustota) v nastavení a hlásí ji do Home Assistantu, aby šlo navrhnout dashboard přesně na obrazovku.

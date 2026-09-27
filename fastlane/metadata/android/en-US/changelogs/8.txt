@@ -1,0 +1,1 @@
+Runs unattended: a watchdog restarts a frozen page and reloads a disconnected one, and the app restarts itself after a crash. New "Restart app" button and "Last recovery" sensor in Home Assistant. Optional settings PIN; settings now open with 5 quick taps in the top-right corner and close after 10 minutes.

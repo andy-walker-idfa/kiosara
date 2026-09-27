@@ -1,0 +1,1 @@
+Záznamy: Nastavení → Záznamy ukazuje, co aplikace v poslední době dělala (připojení, obnovení, restarty, zámek kiosku), s filtrem varování a chyb. Uloženo jen v tabletu. Nový senzor „Paměť aplikace“ a blueprint „Upozornění panelu“, který hlásí výpadek panelu nebo samoopravu.

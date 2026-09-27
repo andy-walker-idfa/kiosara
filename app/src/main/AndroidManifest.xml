@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- Runtime permission on Android 17+ at targetSdk 37; WebView needs it to reach HA on the LAN. -->
+    <uses-permission android:name="android.permission.ACCESS_LOCAL_NETWORK" />
+    <!-- MQTT connection service (specialUse). Justifications: docs/store-policy-notes.md. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- Switches the screen on for a moment when the dashboard returns to the front with the screen off. -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!-- Wi-Fi RSSI on Android 10-11 only; newer versions read it from NetworkCapabilities. -->
+    <uses-permission
+        android:name="android.permission.ACCESS_WIFI_STATE"
+        android:maxSdkVersion="30" />
+
+    <application
+        android:name=".DashboardApplication"
+        android:allowBackup="false"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.App">
+
+        <!--
+          Privacy: WebView never sends usage statistics to Google. Safe Browsing stays on (user decision;
+          disclosed in PRIVACY.md): it protects against known malicious sites reached via links.
+        -->
+        <meta-data
+            android:name="android.webkit.WebView.MetricsOptOut"
+            android:value="true" />
+
+        <!--
+          Dashboard + HOME launcher. Handles all configuration changes itself so the WebView (and its
+          page state) is never recreated. singleTask: pressing HOME returns to the existing instance.
+        -->
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboard|keyboardHidden|navigation|density|uiMode|fontScale|layoutDirection|locale|touchscreen|mcc|mnc|colorMode|fontWeightAdjustment|grammaticalGender"
+            android:exported="true"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.HOME" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".settings.ui.SettingsActivity"
+            android:exported="false" />
+
+        <!-- Log viewer, opened only from Settings (behind the PIN). -->
+        <activity
+            android:name=".settings.ui.LogViewerActivity"
+            android:exported="false" />
+
+        <!--
+          Restart trampoline (crash, frozen app, "Restart app" from HA). Own process, so it survives killing the
+          main one; translucent, so the app counts as visible and may reopen the dashboard.
+        -->
+        <activity
+            android:name=".recovery.RestartActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:noHistory="true"
+            android:process=":restart"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <!--
+          Keeps the MQTT connection to the user's Home Assistant while the screen is off or the dashboard is
+          hidden. Runs only while MQTT is enabled.
+        -->
+        <service
+            android:name=".service.ConnectionService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Always-on smart-home wall panel: reports device state to and receives commands from the user's own Home Assistant via MQTT" />
+        </service>
+
+        <!-- System broadcast; delivered by the system, so the receiver need not be exported. -->
+        <receiver
+            android:name=".service.BootReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- MY_PACKAGE_REPLACED is delivered explicitly to this package, so the receiver need not be exported. -->
+        <receiver
+            android:name=".kiosk.AppUpdateReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+
+        <!--
+          Device admin for the optional kiosk lock (device owner, provisioned by the user over adb). No policies.
+          BIND_DEVICE_ADMIN: only the system can call it. See docs/store-policy-notes.md.
+        -->
+        <receiver
+            android:name=".kiosk.KioskAdminReceiver"
+            android:exported="true"
+            android:permission="android.permission.BIND_DEVICE_ADMIN">
+            <meta-data
+                android:name="android.app.device_admin"
+                android:resource="@xml/device_admin" />
+            <intent-filter>
+                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Backup re-lock at the end of "Unlock for 15 minutes"; only the app's own alarm reaches it. -->
+        <receiver
+            android:name=".kiosk.RelockReceiver"
+            android:exported="false" />
+
+        <!--
+          Clears a forgotten settings PIN. Exported but protected by DUMP, which only the adb shell holds, so no
+          other app can send it. See docs/store-policy-notes.md.
+        -->
+        <receiver
+            android:name=".security.PinResetReceiver"
+            android:exported="true"
+            android:permission="android.permission.DUMP">
+            <intent-filter>
+                <action android:name="io.github.andy_walker_idfa.smarthome_dashboard.action.RESET_PIN" />
+            </intent-filter>
+        </receiver>
+    </application>
+
+</manifest>

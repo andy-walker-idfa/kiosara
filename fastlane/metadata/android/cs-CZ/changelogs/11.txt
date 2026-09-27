@@ -1,0 +1,1 @@
+Dashboard nyní zapne obrazovku, když se vrátí do popředí (po aktualizaci, restartu nebo konci „Odemknout na 15 minut“); dříve mohla zůstat tmavá, pokud obrazovka mezitím zhasla při otevřené jiné aplikaci.

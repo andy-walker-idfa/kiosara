@@ -1,0 +1,1 @@
+Běží bez dozoru: hlídač restartuje zamrzlou stránku a znovu načte odpojenou, aplikace se po pádu sama restartuje. Nové tlačítko „Restartovat aplikaci“ a senzor „Poslední obnova“ v Home Assistantu. Volitelný PIN nastavení; nastavení se otevře 5 rychlými klepnutími do pravého horního rohu a po 10 minutách se zavře.

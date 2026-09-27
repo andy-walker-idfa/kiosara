@@ -1,0 +1,21 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+
+[*.{kt,kts}]
+max_line_length = 120
+ktlint_code_style = android_studio
+# Compose functions are PascalCase by convention.
+ktlint_function_naming_ignore_when_annotated_with = Composable
+# The permanent applicationId-derived package io.github.andy_walker_idfa.smarthome_dashboard contains
+# underscores (GitHub user "andy-walker-idfa"); valid Kotlin/Java, but ktlint's package-name rule rejects it.
+ktlint_standard_package-name = disabled
+
+[*.{yml,yaml,json,toml}]
+indent_size = 2

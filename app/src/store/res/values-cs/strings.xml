@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="battery_optimization_store_hint">V seznamu přepněte na „Všechny aplikace“, vyberte %1$s a zvolte „Neoptimalizovat“.</string>
+</resources>

@@ -1,0 +1,59 @@
+name: Device report
+description: Tell us how Kiosara runs on your tablet (working or not), for the "Tested devices" table.
+labels: [device report]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Every report helps, including "works fine". Please don't include personal data.
+  - type: input
+    id: device
+    attributes:
+      label: Tablet model
+      description: Manufacturer and model, e.g. "Lenovo Tab M9 (TB310FU)".
+    validations:
+      required: true
+  - type: input
+    id: android
+    attributes:
+      label: Android version
+    validations:
+      required: true
+  - type: input
+    id: webview
+    attributes:
+      label: Android System WebView version
+      description: Android Settings → Apps → Android System WebView.
+  - type: input
+    id: app_version
+    attributes:
+      label: App version
+      description: Bottom of the app's Settings.
+    validations:
+      required: true
+  - type: dropdown
+    id: status
+    attributes:
+      label: Overall
+      options:
+        - Works well
+        - Works with problems
+        - Doesn't work
+    validations:
+      required: true
+  - type: checkboxes
+    id: tested
+    attributes:
+      label: What did you try?
+      options:
+        - label: Dashboard shows and stays logged in after a reboot
+        - label: Night mode (black screen, touch wakes it)
+        - label: MQTT connection and entities in Home Assistant
+        - label: Battery charge guard blueprint with a smart plug
+        - label: Kiosk lock (device owner)
+        - label: Runs for several days without intervention
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: Anything device-specific (battery management, taskbar, screen wake, etc.).

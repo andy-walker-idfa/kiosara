@@ -1,0 +1,27 @@
+# Kiosara example theme: dark, calm colours for a wall panel.
+#
+# Install: save this file as /config/themes/kiosara.yaml and make sure configuration.yaml loads themes:
+#   frontend:
+#     themes: !include_dir_merge_named themes
+# then restart Home Assistant (or run the "Frontend: Reload themes" action). The example dashboard selects it
+# with "theme: kiosara"; you can also pick it in your user profile.
+#
+# The fonts (Barlow, Barlow Semi Condensed) are used if available and fall back to Roboto otherwise.
+kiosara:
+   modes:
+     dark:
+       primary-background-color: "#0f1419"
+       lovelace-background: "#0f1419"
+       card-background-color: "#182029"
+       ha-card-background: "#182029"
+       ha-card-border-radius: "24px"
+       ha-card-border-width: "0px"
+       ha-card-box-shadow: "none"
+       primary-text-color: "#e6edf3"
+       secondary-text-color: "#93a1b0"
+       primary-color: "#6ca6e0"
+       accent-color: "#f4b942"
+       divider-color: "#2a3642"
+       state-icon-color: "#93a1b0"
+       primary-font-family: "Barlow, Roboto, sans-serif"
+       ha-font-family-body: "Barlow, Roboto, sans-serif"

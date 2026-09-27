@@ -1,0 +1,1 @@
+Screensaver (clock, dim or black), night mode with its own schedule or controlled by Home Assistant, automatic brightness from the light sensor, and a touch that always wakes the screen. New Home Assistant entities for the screen and ambient light, plus wake-on-motion and day/night blueprints. Brightness set from Home Assistant is now kept after restarts.

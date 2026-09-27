@@ -1,0 +1,1 @@
+Nástěnný kiosk pro dashboard Home Assistantu. Open source, bez sledování.

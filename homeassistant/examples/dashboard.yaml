@@ -1,0 +1,301 @@
+# Kiosara example dashboard (a "sections" view for a landscape wall panel, 2 columns).
+#
+# Every entity ID starting with YOUR_ is a placeholder: replace it with one of your own entities.
+#   sensor.YOUR_DATE_TIME_ISO             updates every minute; e.g. "Date & Time (ISO)" from the Time & Date
+#                                         integration (only used to refresh the clock)
+#   weather.YOUR_WEATHER                  any weather entity
+#   sensor.YOUR_OUTDOOR_TEMPERATURE       outdoor temperature (°C)
+#   sensor.YOUR_FEELS_LIKE_TEMPERATURE    "feels like" temperature (°C)
+#   sensor.YOUR_TODAY_MAX_TEMPERATURE     today's forecast maximum (°C)
+#   sensor.YOUR_TODAY_MIN_TEMPERATURE     today's forecast minimum (°C)
+#   sensor.YOUR_INVERTER_MODE             solar inverter run mode (text; "normal" = green dot, "fault" = orange)
+#   sensor.YOUR_BATTERY_POWER             home battery power (W; positive = charging)
+#   sensor.YOUR_BATTERY_STATE_OF_CHARGE   home battery state of charge (%)
+#   sensor.YOUR_GRID_IMPORT_POWER         power taken from the grid (W)
+#   sensor.YOUR_GRID_EXPORT_POWER         power fed into the grid (W)
+#   sensor.YOUR_SOLAR_POWER               solar production (W)
+#   sensor.YOUR_HOME_POWER                house consumption (W)
+#   sensor.YOUR_OPEN_DOORS_COUNT          number of open doors, with an attribute "doors" listing their names
+#                                         (e.g. a template sensor over your door contact sensors)
+# Remove the cards you don't need (e.g. the energy section without solar).
+#
+# Required custom cards and plugins (install via HACS → Frontend):
+#   - button-card            (custom:button-card)
+#   - power-flow-card-plus   (custom:power-flow-card-plus)
+#   - kiosk-mode             (hides the header and sidebar; configured by "kiosk_mode" below)
+#
+# Theme: homeassistant/themes/kiosara.yaml (fonts: Barlow / Barlow Semi Condensed, falling back to Roboto).
+#
+# How to use: Settings → Dashboards → Add dashboard → open it → ⋮ → Edit dashboard → ⋮ → Raw configuration editor,
+# paste this file, replace the placeholders, save. Log the tablet in as a non-admin user: "non_admin_settings"
+# then applies kiosk mode on the panel only, while admins still see the normal interface.
+title: Kiosara
+kiosk_mode:
+  non_admin_settings:
+    kiosk: true
+views:
+  - title: Wall
+    path: '0'
+    type: sections
+    max_columns: 2
+    theme: kiosara
+    sections:
+      - type: grid
+        column_span: 2
+        cards:
+          - type: horizontal-stack
+            grid_options:
+              columns: full
+            cards:
+              - type: custom:button-card
+                entity: sensor.YOUR_DATE_TIME_ISO
+                triggers_update: sensor.YOUR_DATE_TIME_ISO
+                show_icon: false
+                show_state: false
+                tap_action:
+                  action: none
+                hold_action:
+                  action: none
+                name: >
+                  [[[ return new Date().toLocaleTimeString('en-GB', {hour:
+                  '2-digit', minute: '2-digit'}); ]]]
+                custom_fields:
+                  date: |
+                    [[[
+                      const d = new Date();
+                      const wd = d.toLocaleDateString('en-GB', {weekday: 'long'});
+                      const dm = d.toLocaleDateString('en-GB', {day: 'numeric', month: 'long'});
+                      return `<div style="font-weight:500">${wd}</div><div style="color:var(--secondary-text-color)">${dm}</div>`;
+                    ]]]
+                styles:
+                  card:
+                    - background: none
+                    - box-shadow: none
+                    - padding: 0
+                  grid:
+                    - grid-template-areas: '"n date"'
+                    - grid-template-columns: auto 1fr
+                    - column-gap: 24px
+                    - align-items: center
+                  name:
+                    - font-family: '''Barlow Semi Condensed'', Barlow, sans-serif'
+                    - font-size: 104px
+                    - font-weight: 600
+                    - line-height: 1
+                    - justify-self: start
+                  custom_fields:
+                    date:
+                      - font-size: 24px
+                      - justify-self: start
+                      - text-align: left
+              - type: custom:button-card
+                entity: weather.YOUR_WEATHER
+                triggers_update:
+                  - sensor.YOUR_OUTDOOR_TEMPERATURE
+                  - sensor.YOUR_FEELS_LIKE_TEMPERATURE
+                  - sensor.YOUR_TODAY_MAX_TEMPERATURE
+                  - sensor.YOUR_TODAY_MIN_TEMPERATURE
+                show_state: false
+                tap_action:
+                  action: none
+                hold_action:
+                  action: none
+                icon: |
+                  [[[
+                    const m = {
+                      'clear-night': 'mdi:weather-night', 'cloudy': 'mdi:weather-cloudy',
+                      'fog': 'mdi:weather-fog', 'hail': 'mdi:weather-hail',
+                      'lightning': 'mdi:weather-lightning', 'lightning-rainy': 'mdi:weather-lightning-rainy',
+                      'partlycloudy': 'mdi:weather-partly-cloudy', 'pouring': 'mdi:weather-pouring',
+                      'rainy': 'mdi:weather-rainy', 'snowy': 'mdi:weather-snowy',
+                      'snowy-rainy': 'mdi:weather-snowy-rainy', 'sunny': 'mdi:weather-sunny',
+                      'windy': 'mdi:weather-windy', 'windy-variant': 'mdi:weather-windy-variant',
+                      'exceptional': 'mdi:alert-circle-outline'
+                    };
+                    return m[entity.state] || 'mdi:weather-cloudy';
+                  ]]]
+                name: |
+                  [[[
+                    const t = parseFloat(states['sensor.YOUR_OUTDOOR_TEMPERATURE']?.state);
+                    return isNaN(t) ? '–' : t.toFixed(1) + '°';
+                  ]]]
+                custom_fields:
+                  cond: |
+                    [[[
+                      const r = (id) => {
+                        const v = parseFloat(states[id]?.state);
+                        return isNaN(v) ? '–' : Math.round(v);
+                      };
+                      const cond = hass.formatEntityState ? hass.formatEntityState(entity) : entity.state;
+                      return `<div style="font-size:24px;font-weight:500">${cond}</div>
+                              <div style="font-size:18px;color:var(--secondary-text-color)">
+                                Feels ${r('sensor.YOUR_FEELS_LIKE_TEMPERATURE')}° ·
+                                ${r('sensor.YOUR_TODAY_MAX_TEMPERATURE')}° / ${r('sensor.YOUR_TODAY_MIN_TEMPERATURE')}°
+                              </div>`;
+                    ]]]
+                styles:
+                  card:
+                    - background: none
+                    - box-shadow: none
+                    - padding: 0
+                  grid:
+                    - grid-template-areas: '"i n cond"'
+                    - grid-template-columns: 72px auto 1fr
+                    - column-gap: 16px
+                    - align-items: center
+                  icon:
+                    - width: 64px
+                    - color: '#f4b942'
+                  name:
+                    - font-family: '''Barlow Semi Condensed'', Barlow, sans-serif'
+                    - font-size: 68px
+                    - font-weight: 500
+                    - line-height: 1
+                    - justify-self: start
+                  custom_fields:
+                    cond:
+                      - justify-self: start
+                      - text-align: left
+      - type: grid
+        cards:
+          - type: custom:button-card
+            entity: sensor.YOUR_INVERTER_MODE
+            name: Energy now
+            show_icon: false
+            show_state: false
+            tap_action:
+              action: none
+            hold_action:
+              action: none
+            grid_options:
+              columns: full
+            custom_fields:
+              mode: |
+                [[[
+                  const s = hass.formatEntityState ? hass.formatEntityState(entity) : entity.state;
+                  const raw = String(entity.state).toLowerCase();
+                  const fault = raw.includes('fault');
+                  const normal = raw.includes('normal');
+                  const dot = fault ? '#ffa566' : (normal ? '#74d3b3' : '#f4b942');
+                  const bg = fault ? '#3a2a1e' : '#22303c';
+                  return `<div style="display:flex;align-items:center;gap:10px;background:${bg};
+                                      border-radius:999px;padding:8px 18px">
+                            <span style="width:12px;height:12px;border-radius:50%;background:${dot}"></span>
+                            <span style="font-size:22px;font-weight:700">${s}</span>
+                          </div>`;
+                ]]]
+            styles:
+              card:
+                - background: none
+                - box-shadow: none
+                - padding: 0 4px
+              grid:
+                - grid-template-areas: '"n mode"'
+                - grid-template-columns: 1fr auto
+                - align-items: center
+              name:
+                - font-size: 16px
+                - font-weight: 600
+                - letter-spacing: 0.12em
+                - text-transform: uppercase
+                - color: var(--secondary-text-color)
+                - justify-self: start
+          - type: custom:power-flow-card-plus
+            grid_options:
+              columns: full
+            entities:
+              battery:
+                entity: sensor.YOUR_BATTERY_POWER
+                state_of_charge: sensor.YOUR_BATTERY_STATE_OF_CHARGE
+              grid:
+                entity:
+                  consumption: sensor.YOUR_GRID_IMPORT_POWER
+                  production: sensor.YOUR_GRID_EXPORT_POWER
+              solar:
+                entity: sensor.YOUR_SOLAR_POWER
+                display_zero_state: true
+              home:
+                entity: sensor.YOUR_HOME_POWER
+                override_state: true
+            clickable_entities: false
+            display_zero_lines:
+              mode: show
+              transparency: 50
+            use_new_flow_rate_model: true
+            w_decimals: 0
+            kw_decimals: 1
+            min_flow_rate: 0.75
+            max_flow_rate: 6
+            max_expected_power: 2000
+            min_expected_power: 0.01
+            watt_threshold: 1000
+      - type: grid
+        cards:
+          - type: weather-forecast
+            entity: weather.YOUR_WEATHER
+            show_current: false
+            show_forecast: true
+            forecast_type: daily
+            forecast_slots: 5
+            tap_action:
+              action: none
+            grid_options:
+              columns: full
+          - type: heading
+            heading: Doors
+            heading_style: subtitle
+          - type: custom:button-card
+            entity: sensor.YOUR_OPEN_DOORS_COUNT
+            show_state: false
+            show_label: true
+            tap_action:
+              action: none
+            hold_action:
+              action: none
+            grid_options:
+              columns: full
+            icon: >
+              [[[ return Number(entity.state) > 0 ? 'mdi:home-lock-open' :
+              'mdi:home-lock'; ]]]
+            name: |
+              [[[
+                const n = Number(entity.state);
+                if (n === 0) return 'All doors closed';
+                return n === 1 ? '1 door open' : `${n} doors open`;
+              ]]]
+            label: >
+              [[[ return Number(entity.state) > 0 ? (entity.attributes.doors ||
+              []).join(', ') : ''; ]]]
+            styles:
+              card:
+                - padding: 18px 22px
+              grid:
+                - grid-template-areas: '"i n" "i l"'
+                - grid-template-columns: 60px 1fr
+                - column-gap: 16px
+              icon:
+                - width: 52px
+              name:
+                - font-size: 24px
+                - font-weight: 600
+                - justify-self: start
+              label:
+                - font-size: 18px
+                - color: var(--secondary-text-color)
+                - justify-self: start
+                - text-align: left
+                - white-space: normal
+            state:
+              - value: 0
+                operator: '>'
+                styles:
+                  card:
+                    - background: '#3a2a1e'
+                  icon:
+                    - color: '#ffa566'
+                  name:
+                    - color: '#ffa566'
+              - operator: default
+                styles:
+                  icon:
+                    - color: '#74d3b3'
