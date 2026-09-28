@@ -9,8 +9,13 @@
 > **Not affiliated with or endorsed by Home Assistant or the Open Home Foundation.**
 > "Home Assistant" is used only to describe what this app works with.
 
-<!-- Photo placeholder: a picture of Kiosara on a wall-mounted tablet goes here (docs/images/). -->
-*Photo of a panel in use: coming soon.*
+<p>
+  <img src="docs/images/panel-day.jpg" alt="Kiosara on a wall-mounted Lenovo Tab M9, showing a Home Assistant dashboard with clock, weather, solar and battery power flow, wind and door status" width="49%">
+  <img src="docs/images/panel-night.jpg" alt="The same dashboard in the evening, with the dark theme" width="49%">
+</p>
+
+*The author's panel on a Lenovo Tab M9, by day and in the evening. The
+[example dashboard and theme](homeassistant/examples/dashboard.yaml) are based on it.*
 
 ## What it does
 
