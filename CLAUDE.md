@@ -75,7 +75,7 @@ See the `build-and-deploy` and `device-provisioning` skills in `.claude/skills/`
 ```powershell
 .\gradlew.bat ktlintCheck testGithubDebugUnitTest testStoreDebugUnitTest lintGithubDebug lintStoreDebug  # gate
 .\gradlew.bat connectedGithubDebugAndroidTest           # on-device tests (tablet connected)
-.\gradlew.bat assembleGithubRelease                     # the tablet build (signed, ~2 MB, R8)
+.\gradlew.bat assembleGithubRelease                     # the tablet build (signed, ~3.5 MB, R8)
 adb install -r app\build\outputs\apk\github\release\app-github-release.apk
 adb shell am start -n io.github.andy_walker_idfa.smarthome_dashboard/.MainActivity
 ```
@@ -116,7 +116,7 @@ in `DashboardApplication` and is the only place that knows concrete classes.
 |---|---|---|
 | `core` | `Clock`, `AppLog` (`LogSink`), `FileLogSink` (`LogReader`), `LogRedactor`, `Backoff` | `AppLog` tags are `SHDash/<Tag>`; see "Log files (Phase 6)". |
 | `settings` | `SettingsRepository`, `Settings` (+`DeviceSettings`, `WebSettings`, `MqttSettings`, `ScreenSettings`, `SecuritySettings`), `UrlValidator` | Typed DataStore + kotlinx JSON, `schemaVersion` = 1, unknown keys ignored (keys of settings removed in 0.8.0 are simply dropped), corrupt file → defaults. Default `startUrl` is **empty** ("Not set up" screen). |
-| `settings.ui` | `SettingsActivity`, `SettingsDraft` | See "Settings screen". PIN protection in Phase 4a; wizard, import/export in beta preparation. |
+| `settings.ui` | `SettingsActivity`, `SettingsDraft`, `LogViewerActivity` | See "Settings screen". PIN protection since Phase 4a; a setup wizard and settings import/export are postponed (see "Postponed"). |
 | `device` | `DeviceIdentity` | `Settings.device.id` = the first 32 hex characters of SHA-256(`"shdash-device-id-v1:" + ANDROID_ID`), or a random UUID if ANDROID_ID is unavailable. Created once on start. |
 | `distribution` | `Distribution` | Implemented by `FlavorDistribution` in `src/github` / `src/store`. Holds all channel-specific behaviour. |
 | `security` | `SecretStore`, `SettingsLock`, `PinHasher`, `PinResetReceiver` | `KeystoreSecretStore`: AES-256-GCM Android Keystore key with **no user authentication** (there is no lock screen). Each value is bound to its entry name (GCM AAD). Any decryption failure → entry deleted, `null` returned ("missing, ask again"). |
@@ -175,7 +175,7 @@ in `DashboardApplication` and is the only place that knows concrete classes.
     optional Netty integrations. **Regenerate that list when HiveMQ or Netty versions change.**
   - `META-INF/INDEX.LIST` and `io.netty.versions.properties` are excluded from packaging.
   - Licenses: licensee allows `Apache-2.0` and `MIT-0` (reactive-streams).
-  - APK: 2.2 MB → 3.0 MB.
+  - APK size with HiveMQ and Netty: about 3.5 MB (0.9.0).
 - **Session:**
   - clean session, keep-alive 30 s, LWT `offline` retained on `<base>/availability`;
   - on connect: subscribe → discovery → `online` → all states;
@@ -233,7 +233,8 @@ in `DashboardApplication` and is the only place that knows concrete classes.
 - ANDROID_ID is scoped per signing key, user and device, so the id **survives reinstalls** with the same key.
   It changes only after a factory reset or with a different signing key (e.g. a debug build or F-Droid's own
   signature), and HA then sees a new device.
-- Beta preparation adds "reset/edit device ID". Settings export never carries the id, so it is not duplicated on another tablet.
+- There is no "reset/edit device ID" (postponed with settings export, see "Postponed"). A future settings export
+  must never carry the id, so it is not duplicated on another tablet.
 
 ## Relaunch after update (verified on TB310FU, Android 13, 2026-09-24)
 | Scenario | Result |
@@ -255,8 +256,8 @@ the self-updater after v1.0. Home role over adb:
 The repository is **public** (https://github.com/andy-walker-idfa/kiosara) since v0.9.0 (beta). Don't create store
 accounts, announcements or releases until the user says so.
 - **Flavors** (`distribution` dimension, same applicationId, same versionCode per release):
-  - `github` (default; the tablet build): the self-updater (after v1.0), `REQUEST_INSTALL_PACKAGES`, and the direct
-    battery-optimization exemption request.
+  - `github` (default; the tablet build): the direct battery-optimization exemption request; after v1.0 also the
+    self-updater and `REQUEST_INSTALL_PACKAGES` (neither exists yet).
   - `store` (F-Droid / IzzyOnDroid / Google Play): no updater code and no install permission. Battery
     optimization opens the system settings list with instructions.
   - Flavor code lives **only** in `src/github` / `src/store` behind the `Distribution` interface, never behind
@@ -323,8 +324,9 @@ battery, and runs unattended for months**. The original spec (§6, §7) is super
 list. **Never re-add a dropped or postponed feature from the original spec without asking the user.**
 
 **Planned phases**
-- **Phase 4a (next):** hung-page watchdog, restart after a crash, PIN-protected settings, "Restart app" button (HA).
-- **Phase 4b (planned for v1.0; user decision 2026-09-26):** device owner + Lock Task Mode. **New reason:** children
+- **Phase 4a (done, 0.5.0):** hung-page watchdog, restart after a crash, PIN-protected settings, "Restart app"
+  button (HA; debug builds only since 0.7.2).
+- **Phase 4b (done, 0.6.0; user decision 2026-09-26):** device owner + Lock Task Mode. **New reason:** children
   in the home may use the tablet, so the panel must stay on the dashboard. (Earlier decision "not planned" is
   superseded.) **Safety is the first requirement.** Binding rules from the user:
   1. Check prerequisites first (accounts via `dumpsys account`; whether a factory reset is needed or removing and
@@ -336,7 +338,8 @@ list. **Never re-add a dropped or postponed feature from the original spec witho
   4. PIN-protected escape hatches in Settings: "Unlock for 15 minutes" (lock resumes automatically), "Open Android
      settings", "Remove device owner permanently" (`clearDeviceOwnerApp`, back to a normal tablet).
   5. Lock Task features: block status bar, notifications, Home and Recents; keep the power menu (restart possible).
-  6. The kiosk lock can't be turned off from HA; a diagnostic "Kiosk lock" state sensor is fine.
+  6. The kiosk lock can't be turned off from HA; a diagnostic "Kiosk lock" state sensor is fine (published in
+     debug builds only since 0.7.2).
   7. Setup guide documents the last resort: factory reset via recovery mode, and that the Google account password
      is needed afterwards (FRP) if an account was on the device.
   8. Test sequence: full cycle on an emulator first (provision → lock → escape hatches → remove device owner), then
@@ -353,18 +356,18 @@ list. **Never re-add a dropped or postponed feature from the original spec witho
 - **Principle for 4a (user):** never lock the owner out; this is a home panel, not a public kiosk. The PIN fails
   **open** (unreadable PIN → Settings opens with a notice to set a new one); wrong-PIN lockout is a fixed 30 s after
   5 attempts, not persisted; no PIN reset from HA; adb reset and "clear app data" are the documented fallbacks.
-- **Phase 6 (reduced):** only rotating log files, viewable in Settings.
+- **Phase 6 (reduced, done in 0.7.0):** only rotating log files, viewable in Settings.
 - **Phase 7:** 2–4 week soak test in normal use, bug fixes only, security review, README/user guide, v1.0
   (see FEATURE FREEZE above).
 - **After v1.0:** self-updater (github flavor), together with "come back after an app update".
 
-**Moved to beta preparation:** "Copy diagnostics", first-run setup wizard, settings export/import (see
-"Beta preparation").
+**Postponed (feature freeze):** "Copy diagnostics", first-run setup wizard, settings export/import (see
+"Postponed").
 
 **Conditional:** daily scheduled WebView restart — only if the soak test shows memory growth.
 
 **Removed 2026-09-27 (principle above):** the "Wall panel alerts" blueprint (offline/recovery notifications), all HA
-entities except the six above in release builds (diagnostics, Last recovery, App memory, Kiosk lock, Restart app,
+entities except the release set above in release builds (diagnostics, Last recovery, App memory, Kiosk lock, Restart app,
 URL controls, …; still in debug builds). **0.8.0:** the daytime screensaver (all modes, timeout, brightness, clock
 screen) and its entities; the "Home Assistant decides" night source and the day/night blueprint; additional
 dashboards and the `dashboard` select; periodic reload and idle return; the settings listed as fixed defaults
@@ -391,16 +394,18 @@ only for that blueprint; never requested, untested). The only blueprint left is 
 | Local REST API + admin web page | Duplicates MQTT and adds an open port |
 | In-app "Enable wireless debugging" (decided 2026-09-26) | Developer convenience only. Device owner can't do it (`setGlobalSetting` allows only `ADB_ENABLED` = USB debugging, not `adb_wifi_enabled`); it would need `WRITE_SECURE_SETTINGS` granted over adb, a broad permission that can change any secure setting. Manual way instead: Unlock for 15 minutes → Quick Settings tile; USB cable as fallback |
 
-## Beta preparation (roadmap; do before the Stage 1 beta, after Phase 4a; not yet implemented)
+## Beta tools and postponed items
+**Done for the v0.9.0 public beta:** GitHub issue forms (`.github/ISSUE_TEMPLATE/`: bug report and device report;
+they ask for app, Android and WebView versions and the kiosk state, filled in by hand), the "Tested devices" table
+in the README, and the https://dontkillmyapp.com link in the setup guide.
+
+**Postponed** (feature freeze; not before v1.0 unless the user asks):
 - **"Copy diagnostics" button in Settings** copies a plain-text block to the clipboard containing:
   - app version and flavor; device manufacturer and model; Android version;
   - WebView version; dashboard viewport; device-owner status; MQTT status.
 
   It must contain **no secrets and no URLs with tokens**: no passwords, no HA URL query strings, no MQTT credentials.
-- **GitHub issue templates** (`.github/ISSUE_TEMPLATE/`) for bug reports and device-compatibility reports. Both ask
-  for the diagnostics block.
-- **"Tested devices" table in the README**: model, Android version, WebView version, status and notes.
-- **Setup guide:** add a link to https://dontkillmyapp.com for manufacturers with aggressive battery management.
+  The issue forms would then ask for the block.
 - **First-run setup wizard** (postponed from Phase 6): asks **only for required fields** (Home Assistant URL; if the
   user opts in to the integration: broker address, username, password, with Test connection). Everything else uses
   defaults and stays reachable in Settings.
@@ -466,10 +471,10 @@ only for that blueprint; never requested, untested). The only blueprint left is 
       still to be run by the user.
       Checklist: `docs/testing/phase-3-checklist.md`.
 - [x] **Phase 4a** (0.5.0 / 8): page watchdog, crash/freeze restart, "Restart app" button and "Last recovery"
-      sensor, optional settings PIN (fails open), 5-tap gesture, Settings auto-close.
+      sensor (both debug-only since 0.7.2), optional settings PIN (fails open), 5-tap gesture, Settings auto-close.
       Checklist: `docs/testing/phase-4a-checklist.md`.
 - [x] **Phase 4b** (0.6.0 / 9): optional kiosk lock (device owner + Lock Task Mode, escape hatches, "Kiosk lock"
-      sensor). Tested on the emulator (full cycle) and on the TB310FU (states a/b/c, steps 1–20; recovery/safe mode
+      sensor, debug-only since 0.7.2). Tested on the emulator (full cycle) and on the TB310FU (states a/b/c, steps 1–20; recovery/safe mode
       skipped by the user). Checklist: `docs/testing/phase-4b-checklist.md`.
 - [x] **Phase 6** (0.7.0 / 10): rotating log files viewable in Settings, app memory logged every 30 min.
       (The "App memory" HA sensor is debug-only and the alerts blueprint was removed on 2026-09-27.)
@@ -478,17 +483,23 @@ only for that blueprint; never requested, untested). The only blueprint left is 
       dashboards dropped, back to the start page when night starts. **Feature freeze.**
       **0.8.1** (14): Wake screen button and wake-on-motion blueprint removed (five release entities).
       Checklist: `docs/testing/release-0.8.0-checklist.md`.
-- [ ] Phase 7: soak test, bug fixes only, security review, README/user guide, v1.0 (`docs/testing/phase-7-plan.md`).
+- [x] **0.9.0** (15): final security review fixes, rename to Kiosara, public README and example dashboard, first
+      public release (GitHub pre-release, beta).
+- [ ] Phase 7: soak test (running), bug fixes only, v1.0 (`docs/testing/phase-7-plan.md`). The security review and
+      the public README/user guide are done (0.9.0); refresh them for v1.0 if the fixes change anything.
       Phase 5 is dropped.
 
 ## User-facing docs to keep current
 - **`docs/home-assistant-setup.md`** (written by the user, linked from README). It must stay **generic**: no personal
   IPs, entity IDs or names.
-  - **Phase 2 (0.3.0):** replace the "(available from v0.3)" placeholders with the real entity list, the blueprint
-    import steps and the configuration options (MQTT settings names and defaults). Adjust the version if it changes.
+  - **Every release:** update the version in its "Status" line and the entity table if entities change.
   - **Every phase:** check that the settings gesture (currently: 5 taps within 4 s in the top-right corner, then
     the optional PIN) and the fixed defaults it mentions (device name "Wall panel", MQTT port 1883) match the app.
-- `README.md` feature list, `PRIVACY.md` and `docs/store-policy-notes.md`: update them when features, permissions or data flows change.
+- `README.md` feature list, known limitations and "Tested devices", `PRIVACY.md`, `SECURITY.md` and
+  `docs/store-policy-notes.md`: update them when features, permissions, data flows or tested devices change.
+- `homeassistant/examples/dashboard.yaml` and `homeassistant/themes/kiosara.yaml` are derived from the maintainer's
+  files in the git-ignored `private/` folder: every entity ID becomes a `YOUR_` placeholder (documented in the file
+  header), names become generic, the layout stays identical. Scan the result for personal data before committing.
 
 ## Missing hardware
 No current feature needs optional hardware (the light sensor, camera and proximity features were dropped). If one is
@@ -510,7 +521,8 @@ publishes no MQTT entities for missing hardware, and has unit tests for the "mis
   `readTail` runs on the writer thread (flush, then tail read from the file end); newest first; filter All /
   Warnings / Errors (`LogLines`, continuation lines inherit the level); 10-min idle → back to the dashboard.
 - Start marker per process: version, build type, flavor, Android version, time zone, seconds since boot.
-- `DeviceStateSource` logs app PSS and free memory every 30 min (soak test); HA sensor `app_memory`.
+- `DeviceStateSource` logs app PSS and free memory every 30 min (soak test); HA sensor `app_memory` (debug builds
+  only).
 
 ## Kiosk lock (Phase 4b, 0.6.0)
 - **Three states, all fully usable (user rule 9):** (a) not device owner, (b) device owner + lock off (normal
@@ -527,7 +539,7 @@ publishes no MQTT entities for missing hardware, and has unit tests for the "mis
   only in-app way back; clears allowlist, restrictions and admin).
 - **Safety (user rules 2, 6):** no user restrictions or policies besides the allowlist; Android itself adds
   `no_add_managed_profile` and `no_add_clone_profile` for any device owner. HA: `kiosk_lock` binary sensor
-  (device class lock), no command. adb PIN reset also switches the lock off (the lock needs a PIN).
+  (device class lock, debug builds only since 0.7.2), no command. adb PIN reset also switches the lock off (the lock needs a PIN).
 - **Verified on the Android 13 tablet emulator (Tablet_API33, 2026-09-26):**
   - provisioning with 0 accounts; `userRestrictions: null`; effective restrictions only the two Android defaults;
   - state (b): Home → launcher, other apps, notification shade all work;
@@ -576,7 +588,7 @@ publishes no MQTT entities for missing hardware, and has unit tests for the "mis
   stopping" dialog and AMS's "bad process" state), `MainThreadWatchdog` (tick every 5 s on uptime; frozen
   ≥ 20 s) and `restart_app`. `CrashLoopGuard`: max 5 automatic restarts per 30 min, then Android's handling.
   Not visible → Android's handling (the FGS restarts itself).
-- **Last recovery:** `RecoveryStore` (SharedPreferences, synchronous writes) + `ExitReasons` (API 30+
+- **Last recovery** (HA sensor in debug builds only): `RecoveryStore` (SharedPreferences, synchronous writes) + `ExitReasons` (API 30+
   `ApplicationExitInfo`: crash, native crash, ANR, low memory, signal; our own restarts are marked "expected"
   and skipped). Crash logs contain the exception class and stack frames, never the message.
 - **Settings PIN:** optional, 4–8 digits; `PinHasher` = PBKDF2-HMAC-SHA256, 16-byte salt, iterations calibrated
@@ -598,8 +610,9 @@ publishes no MQTT entities for missing hardware, and has unit tests for the "mis
   - `chrome://hang` (debug build): the probe caught it after 70 s, terminated the renderer (`process known=true`),
     the WebView was rebuilt. A renderer can hang mid-load, so the probe also runs while a page is loading.
   - adb PIN reset broadcast works from the shell.
+  - `restart_app` from HA verified by the user (2026-09-27, also while locked).
   - Still to check (user): calibrated PBKDF2 iterations (logged as "PIN set (N PBKDF2 iterations)"),
-    `restart_app` from HA, frontend-disconnected reload.
+    frontend-disconnected reload.
 
 ## Screen & display (Phase 3, reduced in 0.8.0)
 - **`DisplayController`** is app-scoped (created and started in `AppContainer`), thread-safe (`synchronized`),
@@ -627,7 +640,7 @@ publishes no MQTT entities for missing hardware, and has unit tests for the "mis
   asked for `hass.connection.connected` (`WebAction.CheckHaConnection`); `disconnected` → reload, `unknown` →
   nothing.
 - **Removed entities:** see `Entities.removed` (0.4.1: `ambient_light`, `auto_brightness`; 0.8.0: screensaver,
-  night display and dashboard entities). Platform-only discovery components + cleared retained states; never reuse
+  night display and dashboard entities; 0.8.1: `wake`). Platform-only discovery components + cleared retained states; never reuse
   those object ids.
 - Still open: decide on a screen-off-only partial wake lock after measuring MQTT keep-alive in Doze
   (`dumpsys deviceidle force-idle`). Real screen-off was dropped, so this matters only for the charge cycles and
