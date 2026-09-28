@@ -14,8 +14,8 @@
   <img src="docs/images/panel-night.jpg" alt="The same dashboard in the evening, with the dark theme" width="49%">
 </p>
 
-*The author's panel on a Lenovo Tab M9, by day and in the evening. The
-[example dashboard and theme](homeassistant/examples/dashboard.yaml) are based on it.*
+*The author's panel on a Lenovo Tab M9, by day and in the evening. The same layout is available as an
+[example dashboard](homeassistant/examples/dashboard.yaml) with a [dark theme](homeassistant/themes/kiosara.yaml).*
 
 ## What it does
 
@@ -56,7 +56,7 @@ API, remote settings changes.
 
 Settings open with **5 quick taps in the top-right corner**. The full guide, step by step:
 **[docs/home-assistant-setup.md](docs/home-assistant-setup.md)**. An example dashboard (clock, weather, solar and battery
-flow, doors) and a dark theme are in [homeassistant/examples/](homeassistant/examples/dashboard.yaml) and
+flow, rain, doors, wind rose) and a dark theme are in [homeassistant/examples/](homeassistant/examples/dashboard.yaml) and
 [homeassistant/themes/](homeassistant/themes/kiosara.yaml).
 
 The APK is signed with this certificate (SHA-256):

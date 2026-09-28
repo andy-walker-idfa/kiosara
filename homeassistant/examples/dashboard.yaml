@@ -3,7 +3,7 @@
 # Every entity ID starting with YOUR_ is a placeholder: replace it with one of your own entities.
 #   sensor.YOUR_DATE_TIME_ISO             updates every minute; e.g. "Date & Time (ISO)" from the Time & Date
 #                                         integration (only used to refresh the clock)
-#   weather.YOUR_WEATHER                  any weather entity
+#   weather.YOUR_WEATHER                  any weather entity with a daily forecast
 #   sensor.YOUR_OUTDOOR_TEMPERATURE       outdoor temperature (°C)
 #   sensor.YOUR_FEELS_LIKE_TEMPERATURE    "feels like" temperature (°C)
 #   sensor.YOUR_TODAY_MAX_TEMPERATURE     today's forecast maximum (°C)
@@ -15,13 +15,19 @@
 #   sensor.YOUR_GRID_EXPORT_POWER         power fed into the grid (W)
 #   sensor.YOUR_SOLAR_POWER               solar production (W)
 #   sensor.YOUR_HOME_POWER                house consumption (W)
+#   sensor.YOUR_RAIN_TODAY                rain so far today (mm); the drop fills up to 10 mm
 #   sensor.YOUR_OPEN_DOORS_COUNT          number of open doors, with an attribute "doors" listing their names
 #                                         (e.g. a template sensor over your door contact sensors)
-# Remove the cards you don't need (e.g. the energy section without solar).
+#   sensor.YOUR_WIND_DIRECTION            wind direction (degrees), with recorded history (for the wind rose)
+#   sensor.YOUR_WIND_SPEED                wind speed (km/h)
+#   sensor.YOUR_WIND_GUST                 wind gust (km/h)
+# Weather station values (outdoor, feels like, rain, wind) can come from any local station or weather integration.
+# Remove the cards you don't need (e.g. the energy section without solar, the wind rose without a station).
 #
 # Required custom cards and plugins (install via HACS → Frontend):
 #   - button-card            (custom:button-card)
 #   - power-flow-card-plus   (custom:power-flow-card-plus)
+#   - windrose-card          (custom:windrose-card)
 #   - kiosk-mode             (hides the header and sidebar; configured by "kiosk_mode" below)
 #
 # Theme: homeassistant/themes/kiosara.yaml (fonts: Barlow / Barlow Semi Condensed, falling back to Roboto).
@@ -241,61 +247,159 @@ views:
               action: none
             grid_options:
               columns: full
-          - type: heading
-            heading: Doors
-            heading_style: subtitle
-          - type: custom:button-card
-            entity: sensor.YOUR_OPEN_DOORS_COUNT
-            show_state: false
-            show_label: true
-            tap_action:
-              action: none
-            hold_action:
-              action: none
+          - type: vertical-stack
             grid_options:
-              columns: full
-            icon: >
-              [[[ return Number(entity.state) > 0 ? 'mdi:home-lock-open' :
-              'mdi:home-lock'; ]]]
-            name: |
-              [[[
-                const n = Number(entity.state);
-                if (n === 0) return 'All doors closed';
-                return n === 1 ? '1 door open' : `${n} doors open`;
-              ]]]
-            label: >
-              [[[ return Number(entity.state) > 0 ? (entity.attributes.doors ||
-              []).join(', ') : ''; ]]]
-            styles:
-              card:
-                - padding: 18px 22px
-              grid:
-                - grid-template-areas: '"i n" "i l"'
-                - grid-template-columns: 60px 1fr
-                - column-gap: 16px
-              icon:
-                - width: 52px
-              name:
-                - font-size: 24px
-                - font-weight: 600
-                - justify-self: start
-              label:
-                - font-size: 18px
-                - color: var(--secondary-text-color)
-                - justify-self: start
-                - text-align: left
-                - white-space: normal
-            state:
-              - value: 0
-                operator: '>'
+              columns: 5
+              rows: auto
+            cards:
+              - type: custom:button-card
+                entity: sensor.YOUR_RAIN_TODAY
+                show_icon: false
+                show_state: false
+                show_label: true
+                tap_action:
+                  action: none
+                hold_action:
+                  action: none
+                custom_fields:
+                  drop: |
+                    [[[
+                      const v = parseFloat(entity?.state);
+                      const f = isNaN(v) ? 0 : Math.min(Math.max(v / 10, 0), 1);
+                      const top = 81 - 75 * f;
+                      const d = 'M35 6 C35 6 10 38 10 56 A25 25 0 0 0 60 56 C60 38 35 6 35 6 Z';
+                      return `<svg viewBox="0 0 70 90" width="70" height="90">
+                                <defs><clipPath id="rainfill"><rect x="0" y="${top}" width="70" height="90"/></clipPath></defs>
+                                <path d="${d}" fill="#6ca6e0" clip-path="url(#rainfill)"/>
+                                <path d="${d}" fill="none" stroke="#6ca6e0" stroke-width="3"/>
+                              </svg>`;
+                    ]]]
+                name: |
+                  [[[
+                    const v = parseFloat(entity?.state);
+                    const n = isNaN(v) ? '–' : v.toFixed(1);
+                    return `${n}<span style="font-size:18px;font-weight:500;color:var(--secondary-text-color)"> mm</span>`;
+                  ]]]
+                label: rain today
                 styles:
                   card:
-                    - background: '#3a2a1e'
-                  icon:
-                    - color: '#ffa566'
+                    - padding: 14px
+                  grid:
+                    - grid-template-areas: '"drop" "n" "l"'
+                    - grid-template-rows: auto auto auto
+                    - justify-items: center
+                    - align-content: center
+                    - row-gap: 6px
                   name:
-                    - color: '#ffa566'
-              - operator: default
+                    - font-family: '''Barlow Semi Condensed'', Barlow, sans-serif'
+                    - font-size: 36px
+                    - font-weight: 600
+                    - line-height: 1
+                  label:
+                    - font-size: 16px
+                    - color: var(--secondary-text-color)
+              - type: custom:button-card
+                entity: sensor.YOUR_OPEN_DOORS_COUNT
+                show_state: false
+                show_label: true
+                tap_action:
+                  action: none
+                hold_action:
+                  action: none
+                icon: >
+                  [[[ return Number(entity.state) > 0 ? 'mdi:home-lock-open' :
+                  'mdi:home-lock'; ]]]
+                name: |
+                  [[[
+                    const n = Number(entity.state);
+                    if (n === 0) return 'All doors closed';
+                    return n === 1 ? '1 door open' : `${n} doors open`;
+                  ]]]
+                label: >
+                  [[[ return Number(entity.state) > 0 ? (entity.attributes.doors
+                  || []).join(', ') : ''; ]]]
                 styles:
+                  card:
+                    - padding: 12px 14px
+                  grid:
+                    - grid-template-areas: '"i n" "i l"'
+                    - grid-template-columns: 36px 1fr
+                    - column-gap: 10px
                   icon:
-                    - color: '#74d3b3'
+                    - width: 32px
+                  name:
+                    - font-size: 19px
+                    - font-weight: 600
+                    - line-height: 1.2
+                    - justify-self: start
+                    - text-align: left
+                    - white-space: normal
+                  label:
+                    - font-size: 15px
+                    - color: var(--secondary-text-color)
+                    - justify-self: start
+                    - text-align: left
+                    - white-space: normal
+                state:
+                  - value: 0
+                    operator: '>'
+                    styles:
+                      card:
+                        - background: '#3a2a1e'
+                      icon:
+                        - color: '#ffa566'
+                      name:
+                        - color: '#ffa566'
+                  - operator: default
+                    styles:
+                      icon:
+                        - color: '#74d3b3'
+          - type: custom:windrose-card
+            grid_options:
+              columns: 7
+              rows: auto
+            refresh_interval: 300
+            data_period:
+              preset_period: today
+            hide_windspeed_bar: true
+            wind_direction_entity:
+              entity: sensor.YOUR_WIND_DIRECTION
+            windspeed_entities:
+              - entity: sensor.YOUR_WIND_SPEED
+                name: Speed
+                output_speed_unit: kph
+                speed_range_beaufort: true
+            matching_strategy:
+              name: direction-first
+            rose_config:
+              center_circle:
+                enabled: true
+                size: 60
+                text: ${calm-percentage}%
+                text_size: 40
+            current_direction:
+              show_arrow: true
+              arrow_size: 50
+            direction_labels:
+              cardinal_direction_letters: NESW
+              show_cardinal_directions: true
+              show_intercardinal_directions: false
+            colors:
+              rose_lines: '#2a3642'
+              rose_cardinal_direction_labels: '#93a1b0'
+              rose_current_direction_arrow: '#ff6b5a'
+            corner_info:
+              top_left:
+                label: Wind
+                unit: ' km/h'
+                entity: sensor.YOUR_WIND_SPEED
+                label_text_size: 40
+                value_text_size: 55
+                color: '#93a1b0'
+              top_right:
+                label: Gust
+                unit: ' km/h'
+                entity: sensor.YOUR_WIND_GUST
+                label_text_size: 40
+                value_text_size: 55
+                color: '#93a1b0'

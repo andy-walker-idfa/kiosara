@@ -66,9 +66,9 @@ You'll enter these credentials in the app's MQTT settings. They are stored encry
 ## 4. The dashboard
 
 **Example:** [`homeassistant/examples/dashboard.yaml`](../homeassistant/examples/dashboard.yaml) is a complete
-landscape panel (clock, weather, solar and battery power flow, open doors) with the dark theme
+landscape panel (clock, weather, solar and battery power flow, rain today, open doors, wind rose) with the dark theme
 [`homeassistant/themes/kiosara.yaml`](../homeassistant/themes/kiosara.yaml). The comments at the top list the
-placeholders to replace and the HACS cards it needs (button-card, power-flow-card-plus, kiosk-mode).
+placeholders to replace and the HACS cards it needs (button-card, power-flow-card-plus, windrose-card, kiosk-mode).
 
 Any Home Assistant dashboard works. For the best result on a wall-mounted tablet:
 
